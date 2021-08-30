@@ -1,0 +1,161 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300ita‌​lic,400italic,500,500italic,700,700italic,900italic,900);
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Roboto", sans-serif;
+}
+.homepage__container {
+  background: $main-background;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  grid-column-gap: 0;
+  grid-row-gap: 0;
+}
+.form__container {
+  grid-area: 2 / 4 / 5 / 7;
+  align-self: center;
+  justify-self: center;
+}
+#app .homepage__card {
+  min-width: 380px;
+  min-height: 255px;
+  height: fit-content;
+  border-radius: 9px;
+}
+.homepage__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.form__title {
+  margin-left: auto;
+  margin-bottom: 35px;
+  font-size: 17.5px;
+  line-height: 20px;
+  text-align: center;
+  letter-spacing: -0.4375px;
+  color: $main-text-color;
+}
+.form__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.form__footer_anchor {
+  text-decoration: none;
+  font-size: 10.5px;
+  line-height: 12px;
+}
+.header__img {
+  width: 45px;
+  height: 45px;
+  margin-bottom: 17px;
+}
+.header_title {
+  font-size: 24px;
+  line-height: 28px;
+  color: $main-text-color;
+  margin-left: 12px;
+  margin-bottom: 26px;
+}
+#app .el-button {
+  width: 100px;
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  color: $main-white;
+  background-color: $main-blue;
+  border-color: $main-blue;
+  -webkit-appearance: none;
+  text-align: center;
+  box-sizing: border-box;
+  outline: 0;
+  margin: 0;
+  transition: .1s;
+  font-weight: 500;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  padding: 9px 15px;
+  font-size: 12px;
+  border-radius: 3px;
+}
+#app .el-button:hover {
+  background-color: $main-light-blue;
+  border-color: $main-light-blue;
+}
+#app .el-form-item__label {
+  font-size: 10.5px;
+  line-height: 12px;
+}
+#app .el-form-item__label {
+  line-height: 30px;
+}
+#app .el-form-item {
+  margin-bottom: 15px;
+}
+#app .el-form--label-top .el-form-item__label {
+  margin-left: 4px;
+  padding: 0;
+}
+#app .el-link.el-link--primary {
+  color: $main-light-blue;
+  text-decoration: none;
+  font-size: 10.5px;
+  line-height: 12px;
+}
+#app .el-input__inner {
+  -webkit-appearance: none;
+  background-color: $main-white;
+  background-image: none;
+  border-radius: 4px;
+  border: 1px solid $main-semilight-gray;
+  box-sizing: border-box;
+  color: $main-gray;
+  display: inline-block;
+  font-size: inherit;
+  height: 36px;
+  line-height: 36px;
+  outline: 0;
+  padding: 0 15px;
+  transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+  width: 100%;
+}
+#app .el-input__inner:focus {
+  border: 1px solid $main-light-blue;
+}
+#app  .el-link.el-link--primary:hover {
+  color: $main-light-blue;
+  text-decoration-color: inherit;
+  font-size: 10.5px;
+  line-height: 12px;
+}
+
+// tablet (768px - 1023px)
+@media screen and (max-width: $tablet) {
+  .form__container {
+    grid-area: 2 / 2 / 5 / 9;
+  }
+}
+
+// mobile (320px - 767px)
+@media screen and (max-width: $mobile) {
+  .form__container {
+    grid-area: 1 / 1 / 6 / 10;
+  }
+  .form__container {
+    justify-self: stretch;
+    align-self: center;
+  }
+  .homepage__card {
+    min-width: 320px;
+  }
+}
