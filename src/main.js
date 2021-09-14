@@ -3,16 +3,15 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './styles/styles.scss'
-import "./styles/theme/index.css";
-import ElementUI from "element-ui";
-import locale from "element-ui/lib/locale/lang/ru-RU";
+import vuetify from './plugins/vuetify'
 
-Vue.use(ElementUI, { locale });
+import './plugins/index'
 
 Vue.config.productionTip = false
 
 new Vue({
   router,
   store,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')

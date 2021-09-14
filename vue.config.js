@@ -1,9 +1,12 @@
 const path = require("path");
 
 module.exports = {
+  transpileDependencies: [
+    'vuetify'
+  ],
   publicPath: process.env.NODE_ENV === 'production'
-    ? '/admin-panel/'
-    : '/',
+  ? '/admin-panel/'
+  : '/',
   configureWebpack: {
     resolve: {
       alias: {
@@ -18,14 +21,14 @@ module.exports = {
           includePaths: [path.resolve(__dirname, "src/styles/theme/")],
           indentedSyntax: false
         },
-        additionalData: `@import "~@/styles/_variables.scss"; @import "~@/styles/theme/index.css";`
+        additionalData: `@import "~@/styles/_variables.scss";`
       }
     }
   },
   devServer: process.env.NODE_ENV === "production" ? {} : proxy()
-}
+  }
 
-function proxy() {
+  function proxy() {
   return {
     proxy: {
       "/api": {

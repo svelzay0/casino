@@ -1,4 +1,4 @@
-# admin-panel
+# hello-world
 
 ## Project setup
 ```
