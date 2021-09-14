@@ -99,6 +99,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-footer
+      class="elevation-5"
       fixed
       padless
     >

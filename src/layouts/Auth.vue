@@ -37,7 +37,7 @@
           <v-spacer />
         </v-col>
         <v-card
-          min-width="400"
+          width="400"
           class="elevation-12"
         >
           <v-form
