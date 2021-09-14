@@ -9,11 +9,16 @@ export default {
   mutations: {},
   actions: {
     async fetchOrders(context) {
-      this.commit("home/setLoading", true);
+      // this.commit("home/setLoading", true);
+      console.log(123, context)
       try {
         const { data } = await axios({
-          url: "/car?offset=" + context.getters.getOffset + "&limit=10",
-          method: "get"
+          url: process.env.VUE_APP_API_AUTH + "/car?offset=10&limit=10",
+          method: "get",
+          headers: {
+            "X-Api-Factory-Application-Id": `${process.env["VUE_APP_API_FACTORY_ID"]}`,
+            "Content-Type": "application/json"
+          }
         });
         console.log(data)
         // if (context.getters.getOffset !== 0) {
@@ -25,7 +30,7 @@ export default {
         // context.commit("setOffset", context.getters.getOffset + 10);
         // this.commit("home/setLoading", false);
       } catch (e) {
-        this.commit("home/setLoading", false);
+        // this.commit("home/setLoading", false);
         handleError(e);
       }
     }
