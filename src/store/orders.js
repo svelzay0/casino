@@ -12,12 +12,27 @@ export default {
       // this.commit("home/setLoading", true);
       console.log(123, context)
       try {
+        // const axiosApi = axios.create();
+
+        // axiosApi.interceptors.request.use(async config => {
+        //   config.headers = {
+        //     "X-Api-Factory-Application-Id": `${process.env["VUE_APP_API_FACTORY_ID"]}`,
+        //     Accept: "application/json"
+        //   };
+        //   config.baseURL = process.env.VUE_APP_API_PROD;
+        //   return config;
+        // });
+        // const { data } = await axiosApi({
+        //   url: "order?limit=10",
+        //   method: "get"
+        // });
         const { data } = await axios({
-          url: process.env.VUE_APP_API_AUTH + "/car?offset=10&limit=10",
+          url: process.env.VUE_APP_API_PROD + "/order?limit=10",
           method: "get",
           headers: {
-            "X-Api-Factory-Application-Id": `${process.env["VUE_APP_API_FACTORY_ID"]}`,
-            "Content-Type": "application/json"
+            "X-Api-Factory-Application-Id": `${process.env["VUE_APP_API_APPLICATION_ID"]}`,
+            // "Content-Type": "application/json",
+            "Authorization": "Bearer 52efbe08228671240494f537f2486bc109a637b4"
           }
         });
         console.log(data)
