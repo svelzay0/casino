@@ -16,7 +16,7 @@ export default {
       state.user.refreshToken = payload["refresh_token"];
     },
     createBase64Token(state) {
-      let random = Math.random().toString(36).substring(2);
+      const random = Math.random().toString(36).substring(2);
       const token = random + ":" + process.env.VUE_APP_API_KEY;
       localStorage.setItem("token64", btoa(token));
       state.base64Token = btoa(token);
@@ -45,8 +45,11 @@ export default {
         this.commit("shared/setLoading", false);
         return true;
       } catch (e) {
-        this.commit("shared/setLoading", false);
-        this.commit("shared/setError", e.message);
+        console.log(e.response.status)
+        if (e.response.status === 401) {
+          this.commit("shared/setLoading", false);
+          this.commit("shared/setError", 'Неверный логин или пароль');
+        }
         handleError(e);
       }
     },

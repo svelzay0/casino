@@ -12,12 +12,3 @@
 </template>
 
 <script>
-
-export default {
-  name: 'Orders',
-
-  data: () => ({
-    //
-  }),
-};
-</script>

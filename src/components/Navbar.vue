@@ -1,46 +1,6 @@
 <template>
   <div>
-    <v-app-bar
-      color="white"
-      app
-    >
-      <v-row
-        align="center"
-        justify="center"
-      >
-        <v-col cols="auto">
-          <v-app-bar-nav-icon
-            @click="drawer = !drawer"
-          />
-        </v-col>
-        <v-col cols="auto">
-          <v-text-field
-            class="search pt-2"
-            :label="'Поиск...'"
-            dense
-            append-icon="mdi-magnify"
-            clearable
-          />
-        </v-col>
-        <v-spacer />
-        <v-col
-          cols="auto"
-          class="col__borders ma-4 pb-2"
-        >
-          <notification-dropdown />
-        </v-col>
-        <v-col cols="auto" class="avatar">
-          <v-avatar >
-            <img
-              :src="require('@/assets/user-avatar.jpg')"
-              alt="User"
-            >
-          </v-avatar>
-          <span class="pr-10 pl-3">Admin</span>
-          <user-menu />
-        </v-col>
-      </v-row>
-    </v-app-bar>
+    <header-menu />
     <v-navigation-drawer
       v-model="drawer"
       class="elevation-5"
@@ -98,45 +58,18 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <v-footer
-      fixed
-      padless
-    >
-      <v-card
-        class="flex"
-        flat
-        tile
-      >
-        <div class="admin__footer_links">
-          <v-row
-            align="center"
-            justify="center"
-          >
-            <v-col cols="auto">
-              <span class="footer_left_text">Главная страница</span>
-            </v-col>
-            <v-col cols="auto">
-              <span class="footer_left_text_v2">Ссылка</span>
-            </v-col>
-            <v-spacer />
-            <v-col cols="auto">
-              <span class="footer_right pr-3">Copyright © 2020 Simbirsoft</span>
-            </v-col>
-          </v-row>
-        </div>
-      </v-card>
-    </v-footer>
+    <footer-menu />
   </div>
 </template>
 
 <script>
-import NotificationDropdown from './NotificationDropdown'
-import UserMenu from './UserMenu'
+import HeaderMenu from './HeaderMenu'
+import FooterMenu from './FooterMenu'
 
 export default {
   components: {
-    NotificationDropdown,
-    UserMenu
+    HeaderMenu,
+    FooterMenu,
   },
   data: () => ({
     drawer: true,

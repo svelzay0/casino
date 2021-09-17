@@ -6,11 +6,11 @@
         <div class="d-flex align-center py-3">
           <div class="display-1 pl-6 pb-2">
             <span class="main__title">
-            {{ title }}
+              {{ title }}
             </span>
           </div>
         </div>
-        <router-view :key="key" />
+        <router-view />
       </v-container>
     </v-main>
   </v-app>
@@ -24,9 +24,6 @@ export default {
   components: {
     Navbar
   },
-  data: () => ({
-    key: 1
-  }),
   metaInfo () {
     return { title: this.title }
   },

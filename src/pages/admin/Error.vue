@@ -10,14 +10,3 @@
     </v-col>
   </v-row>
 </template>
-
-<script>
-
-export default {
-  name: 'Error',
-
-  data: () => ({
-    //
-  }),
-};
-</script>

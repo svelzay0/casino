@@ -12,12 +12,3 @@
 </template>
 
 <script>
-
-export default {
-  name: 'Menu5',
-
-  data: () => ({
-    //
-  }),
-};
-</script>

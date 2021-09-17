@@ -17,11 +17,7 @@
     watch: {
       error() {
         if (this.error) {
-          if (this.error === 'Request failed with status code 401') {
-            this.$toast.error('Неверный логин или пароль');
-          } else {
-            this.$toast.error(`${this.error}`);
-          }
+          this.$toast.error(`${this.error}`);
         }
       },
     },
