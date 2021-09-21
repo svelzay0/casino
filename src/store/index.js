@@ -5,7 +5,7 @@ import shared from "@/store/shared";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {},
   mutations: {},
   actions: {},
@@ -14,3 +14,5 @@ export default new Vuex.Store({
     shared
   },
 });
+
+export default store

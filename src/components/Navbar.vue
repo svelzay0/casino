@@ -1,6 +1,8 @@
 <template>
   <div>
-    <header-menu />
+    <header-menu
+      @drawer="drawer = !drawer"
+    />
     <v-navigation-drawer
       v-model="drawer"
       class="elevation-5"
@@ -72,8 +74,8 @@ export default {
     FooterMenu,
   },
   data: () => ({
-    drawer: true,
     padless: false,
+    drawer: true,
     items: [
         {
           title: 'Карточка автомобиля',
