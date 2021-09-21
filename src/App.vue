@@ -30,16 +30,19 @@
         ]),
     },
     mounted() {
-      if (localStorage.getItem("tokenCreated")) {
-        const tokenAge = Date.now() - localStorage.getItem("tokenCreated");
-        if (tokenAge < 86100000) {
-          this.refreshToken();
-        } else {
-          this.logoutUser();
-        }
-      } else {
+      if (!localStorage.getItem("tokenCreated")) {
         this.createBase64Token();
       }
+      // if (localStorage.getItem("tokenCreated")) {
+      //   const tokenAge = Date.now() - localStorage.getItem("tokenCreated");
+      //   if (tokenAge < 86100000) {
+      //     this.refreshToken();
+      //   } else {
+      //     this.logoutUser();
+      //   }
+      // } else {
+      //   this.createBase64Token();
+      // }
     },
   };
 </script>

@@ -45,7 +45,6 @@ export default {
         this.commit("shared/setLoading", false);
         return true;
       } catch (e) {
-        console.log(e.response.status)
         if (e.response.status === 401) {
           this.commit("shared/setLoading", false);
           this.commit("shared/setError", 'Неверный логин или пароль');
