@@ -1,7 +1,6 @@
-import axios from "axios";
+import axiosApi from "../shared/axios";
 import router from "@/router";
 import handleError from "../shared/error";
-import headers from "../shared/headers";
 
 export default {
   namespaced: true,
@@ -16,7 +15,7 @@ export default {
       state.user.refreshToken = payload["refresh_token"];
     },
     createBase64Token(state) {
-      let random = Math.random().toString(36).substring(2);
+      const random = Math.random().toString(36).substring(2);
       const token = random + ":" + process.env.VUE_APP_API_KEY;
       localStorage.setItem("token64", btoa(token));
       state.base64Token = btoa(token);
@@ -30,10 +29,8 @@ export default {
       this.commit("shared/clearError");
       this.commit("shared/setLoading", true);
       try {
-        const { data } = await axios({
+        const { data } = await axiosApi({
           url: process.env.VUE_APP_API_AUTH + "/auth/login",
-          method: "post",
-          headers: headers(process.env, localStorage.getItem("token64")),
           data: {
             username: email,
             password: password,
@@ -45,18 +42,19 @@ export default {
         this.commit("shared/setLoading", false);
         return true;
       } catch (e) {
-        this.commit("shared/setLoading", false);
-        this.commit("shared/setError", e.message);
+        if (e.response.status === 401) {
+          this.commit("shared/setLoading", false);
+          this.commit("shared/setError", 'Неверный логин или пароль');
+        }
         handleError(e);
       }
     },
     async refreshToken({ commit }) {
       this.commit("shared/clearError");
       try {
-        const { data } = await axios({
+        const { data } = await axiosApi({
           url: process.env.VUE_APP_API_AUTH + "/auth/refresh",
           method: "post",
-          headers: headers(process.env, localStorage.getItem("token64")),
           data: {
             refresh_token: localStorage.getItem("refresh_token"),
             client_id: localStorage.getItem("user"),
@@ -73,15 +71,10 @@ export default {
     },
     async logoutUser({ commit }) {
       this.commit("shared/clearError");
+      localStorage.setItem("logout", true);
       try {
-        await axios({
-          url: process.env.VUE_APP_API_AUTH + "/auth/logout",
-          method: "post",
-          headers: {
-            "X-Api-Factory-Application-Id": `${process.env["VUE_APP_API_FACTORY_ID"]}`,
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + localStorage.getItem("token"),
-          },
+        await axiosApi({
+          url: process.env.VUE_APP_API_AUTH + "/auth/logout"
         });
         removeItems(localStorage);
         commit("clearUser");

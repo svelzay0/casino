@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapMutations, mapActions } from "vuex";
+  import { mapGetters, mapMutations } from "vuex";
 
   export default {
     name: "App",
@@ -17,33 +17,17 @@
     watch: {
       error() {
         if (this.error) {
-          if (this.error === 'Request failed with status code 401') {
-            this.$toast.error('Неверный логин или пароль');
-          } else {
-            this.$toast.error(`${this.error}`);
-          }
+          this.$toast.error(`${this.error}`);
         }
       },
     },
     methods: {
-      ...mapMutations("user", ["createBase64Token"]),
-      ...mapActions("user",
-        [
-          "refreshToken",
-          "logoutUser"
-        ]),
+      ...mapMutations("user", ["createBase64Token"])
     },
     mounted() {
-      if (localStorage.getItem("tokenCreated")) {
-        const tokenAge = Date.now() - localStorage.getItem("tokenCreated");
-        if (tokenAge < 86100000) {
-          this.refreshToken();
-        } else {
-          this.logoutUser();
-        }
-      } else {
+      if (!localStorage.getItem("tokenCreated")) {
         this.createBase64Token();
       }
-    },
+    }
   };
 </script>

@@ -39,6 +39,7 @@ export default {
     menu: false
   }),
   computed: {
+    // ToDo: После интеграции апи завязаться на длину массива X
     count () {
       return 2
     }

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosApi from "../shared/axios2";
 // import router from "@/router";
 import handleError from "../shared/error";
 // import headers from "../shared/headers";
@@ -10,7 +10,7 @@ export default {
   actions: {
     async fetchOrders(context) {
       // this.commit("home/setLoading", true);
-      console.log(123, context)
+      // console.log(123, context)
       try {
         // const axiosApi = axios.create();
 
@@ -26,16 +26,8 @@ export default {
         //   url: "order?limit=10",
         //   method: "get"
         // });
-        const { data } = await axios({
-          url: process.env.VUE_APP_API_PROD + "/order?limit=10",
-          method: "get",
-          headers: {
-            "X-Api-Factory-Application-Id": `${process.env["VUE_APP_API_APPLICATION_ID"]}`,
-            // "Content-Type": "application/json",
-            "Authorization": "Bearer 52efbe08228671240494f537f2486bc109a637b4"
-          }
-        });
-        console.log(data)
+        const { data } = await axiosApi(ApiRequest("/order"));
+        console.log(data, context)
         // if (context.getters.getOffset !== 0) {
         //   context.commit("addCars", data.data);
         // }
@@ -52,3 +44,10 @@ export default {
   },
   getters: {},
 };
+
+const ApiRequest = (url) => {
+  return {
+    url: url,
+    method: "get"
+  }
+}

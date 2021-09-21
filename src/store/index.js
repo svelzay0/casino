@@ -6,7 +6,7 @@ import orders from "@/store/orders";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {},
   mutations: {},
   actions: {},
@@ -16,3 +16,5 @@ export default new Vuex.Store({
     orders
   },
 });
+
+export default store

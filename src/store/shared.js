@@ -2,7 +2,7 @@ export default {
   namespaced: true,
   state: {
     loading: false,
-    error: null,
+    error: null
   },
   mutations: {
     setLoading(state, payload) {
@@ -13,7 +13,7 @@ export default {
     },
     clearError(state) {
       state.error = null;
-    },
+    }
   },
   actions: {},
   getters: {
@@ -22,6 +22,6 @@ export default {
     },
     error(state) {
       return state.error;
-    },
+    }
   },
 };

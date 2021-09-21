@@ -1,22 +1,42 @@
 import axios from "axios";
-import headers from "headers";
+import headers from "./headers";
+import store from '../store/index'
 
 const base64Token = localStorage.getItem("token64");
 
 const axiosApi = axios.create();
 
-axiosApi.interceptors.request.use(async config => {
+axiosApi.interceptors.request.use( config => {
+  config.method = 'post';
   if (localStorage.getItem("token")) {
-    config.headers = {
-      "X-Api-Factory-Application-Id": `${process.env["VUE_APP_API_FACTORY_ID"]}`,
-      "Content-Type": "application/json",
-    };
+    if (localStorage.getItem("logout")) {
+      config.headers = headers(process.env, localStorage.getItem("token"), 'Bearer ');
+      localStorage.removeItem("logout");
+    } else {
+      config.headers = headers(process.env, base64Token, 'Basic ');
+    }
   } else {
-    config.headers = headers(process.env, base64Token);
+    config.headers = headers(process.env, base64Token, 'Basic ');
+  }
+  config.baseURL = process.env.VUE_APP_API_PROD;
+
+  return config;
+});
+
+axiosApi.interceptors.response.use(response => response, error => {
+  const { status } = error.response
+  if (status === 401) {
+    if (localStorage.getItem("tokenCreated")) {
+      const tokenAge = Date.now() - localStorage.getItem("tokenCreated");
+      if (tokenAge < 86100000) {
+        store.dispatch('user/refreshToken');
+      } else {
+        store.dispatch('user/logoutUser');
+      }
+    } 
   }
 
-  config.baseURL = process.env.VUE_APP_API_PROD;
-  return config;
+  return Promise.reject(error)
 });
 
 export default axiosApi;
