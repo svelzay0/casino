@@ -9,7 +9,7 @@
     >
       <v-col cols="auto">
         <v-app-bar-nav-icon
-          @click="drawer = !drawer"
+          @click="$emit('drawer')"
         />
       </v-col>
       <v-col cols="auto">
@@ -52,10 +52,6 @@ export default {
   components: {
     NotificationDropdown,
     UserMenu
-  },
-
-  data: () => ({
-    drawer: true
-  })
+  }
 }
 </script>

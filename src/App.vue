@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapMutations, mapActions } from "vuex";
+  import { mapGetters, mapMutations } from "vuex";
 
   export default {
     name: "App",
@@ -22,22 +22,10 @@
       },
     },
     methods: {
-      ...mapMutations("user", ["createBase64Token"]),
-      ...mapActions("user",
-        [
-          "refreshToken",
-          "logoutUser"
-        ]),
+      ...mapMutations("user", ["createBase64Token"])
     },
     mounted() {
-      if (localStorage.getItem("tokenCreated")) {
-        const tokenAge = Date.now() - localStorage.getItem("tokenCreated");
-        if (tokenAge < 86100000) {
-          this.refreshToken();
-        } else {
-          this.logoutUser();
-        }
-      } else {
+      if (!localStorage.getItem("tokenCreated")) {
         this.createBase64Token();
       }
     },
