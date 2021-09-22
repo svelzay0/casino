@@ -1,7 +1,5 @@
-import axiosApi from "../shared/axios2";
-// import router from "@/router";
+import axios from "axios";
 import handleError from "../shared/error";
-// import headers from "../shared/headers";
 
 export default {
   namespaced: true,
@@ -10,32 +8,9 @@ export default {
   actions: {
     async fetchOrders(context) {
       // this.commit("home/setLoading", true);
-      // console.log(123, context)
       try {
-        // const axiosApi = axios.create();
-
-        // axiosApi.interceptors.request.use(async config => {
-        //   config.headers = {
-        //     "X-Api-Factory-Application-Id": `${process.env["VUE_APP_API_FACTORY_ID"]}`,
-        //     Accept: "application/json"
-        //   };
-        //   config.baseURL = process.env.VUE_APP_API_PROD;
-        //   return config;
-        // });
-        // const { data } = await axiosApi({
-        //   url: "order?limit=10",
-        //   method: "get"
-        // });
-        const { data } = await axiosApi(ApiRequest("/order"));
+        const { data } = await axios(ApiRequest(`${process.env.VUE_APP_API_PROD}/order`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token")));
         console.log(data, context)
-        // if (context.getters.getOffset !== 0) {
-        //   context.commit("addCars", data.data);
-        // }
-        // else {
-        //   context.commit("setCars", data.data);
-        // }
-        // context.commit("setOffset", context.getters.getOffset + 10);
-        // this.commit("home/setLoading", false);
       } catch (e) {
         // this.commit("home/setLoading", false);
         handleError(e);
@@ -45,9 +20,14 @@ export default {
   getters: {},
 };
 
-const ApiRequest = (url) => {
+const ApiRequest = (url, api, prefix, token) => {
   return {
     url: url,
-    method: "get"
+    method: "get",
+    headers: {
+      "X-Api-Factory-Application-Id": api,
+      Accept: "application/json",
+      "Authorization": prefix + token
+    }
   }
 }
