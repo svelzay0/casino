@@ -70,6 +70,10 @@
 .main__title {
   color: $main-text-color;
 }
+.model__car_image {
+  width: 128px;
+  height: 58px;
+}
 
 // desktop-min (1024px - 1023px)
 @media screen and (max-width: $desktop-min) {

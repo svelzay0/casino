@@ -1,67 +1,90 @@
 <template>
-  <v-data-table
-    v-model="orderSelected"
-    :headers="orderHeaders"
-    :items="orderItems"
-    item-key="name"
-    show-select
-    class="elevation-1"
-  >
-    <template #item.id="{ item }">
-      <div style="color: green">
-        {{ item.cityId.id }}
-      </div>
-    </template>
-    <template #item.city="{ item }">
-      <div>
-        {{ item.cityId.name }}
-      </div>
-    </template>
-    <template #item.car="{ item }">
-      <div>
-        {{ item.carId.name }}
-      </div>
-    </template>
-    <template #item.category="{ item }">
-      <div>
-        {{ item.carId.categoryId.description + ' - ' +  item.carId.categoryId.name }}
-      </div>
-    </template>
-    <template #item.number="{ item }">
-      <div>
-        {{ item.carId.number }}
-      </div>
-    </template>
-    <template #item.color="{ item }">
-      <div>
-        {{ item.color }}
-      </div>
-    </template>
-  </v-data-table>
+  <v-row>
+    <v-col class="pl-10 pr-10">
+      <v-data-table
+        :headers="orderHeaders"
+        :items="orderItems"
+        item-key="id"
+        class="elevation-2"
+      >
+        <!-- <template #item.id="{ item }">
+          <div style="color: green">
+            {{ item.cityId.id }}
+          </div>
+        </template> -->
+        <template #item.info="{ item }">
+          <v-row>
+            <v-col>
+              {{ item.cityId ? item.cityId.name : '-' }}
+            </v-col>
+            <v-col>
+              {{ item.dateFrom ? item.dateFrom : '-' }} - {{ item.dateTo ? item.dateTo : '-' }}
+            </v-col>
+          </v-row>
+        </template>
+        <!-- <template #item.car="{ item }">
+          <div>
+            {{ item.carId.name }}
+          </div>
+        </template>
+        <template #item.category="{ item }">
+          <div>
+            {{ item.carId.categoryId.description + ' - ' +  item.carId.categoryId.name }}
+          </div>
+        </template>
+        <template #item.number="{ item }">
+          <div>
+            {{ item.carId.number }}
+          </div>
+        </template> -->
+        <template #item.photo="{ item }">
+          <img
+            class="model__car_image"
+            :src="getImgPath(item.carId)"
+            alt=""
+          />
+        </template>
+        
+        <template #item.color="{ item }">
+          <div>
+            {{ item.color ? item.color : '-' }}
+          </div>
+        </template>
+      </v-data-table>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: 'Orders',
 
-  data: () => ({
-    orderSelected: [],
-    orderItems: []
-  }),
+  data() {
+    return {
+      orderItems: [],
+      imgDefPath: require('@/assets/default_car.jpg')
+    }
+  },
   computed: {
     orderHeaders () {
       return [
+        // {
+        //   value: 'id',
+        //   text: 'ID',
+        //   class: 'text-no-wrap',
+        //   width: '1%'
+        // },
         {
-          value: 'id',
-          text: 'ID',
-          class: 'text-no-wrap',
-          width: '1%'
+          value: 'photo',
+          text: 'Фото',
+          searchable: false,
+          sortable: false
         },
         {
-          value: 'city',
-          text: 'Город',
+          value: 'info',
+          text: 'Информация',
           searchable: false
         },
         {
@@ -116,6 +139,13 @@ export default {
         }
       ]
     },
+    ...mapGetters("orders", ["getOrders"])
+  },
+  watch: {
+    'getOrders': function (newVal) {
+      this.orderItems = newVal
+      console.log(6, this.orderItems)
+    },
   },
   mounted() {
     this.fetchOrders();
@@ -124,8 +154,15 @@ export default {
     ...mapActions("orders",
       [
         "fetchOrders"
-      ])
+      ]),
+    getImgPath(car) {
+      if (typeof(car) != "undefined" && car !== null) {
+        return `${process.env.VUE_APP_API_IMG}${car.thumbnail.path}`;
+      }
+      else return this.imgDefPath
+    }
   }
+  
   
 };
 </script>
