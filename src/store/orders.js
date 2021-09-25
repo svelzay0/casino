@@ -13,14 +13,10 @@ export default {
   },
   actions: {
     async fetchOrders(context) {
-      // this.commit("home/setLoading", true);
       try {
         const { data } = await axios(ApiRequest(`${process.env.VUE_APP_API_PROD}/order`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token")));
         context.commit("setOrders", data.data);
-        // this.commit("home/setLoading", false);
-        console.log(data, context)
       } catch (e) {
-        // this.commit("home/setLoading", false);
         handleError(e);
       }
     }

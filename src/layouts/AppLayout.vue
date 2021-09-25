@@ -24,12 +24,25 @@ export default {
   components: {
     Navbar
   },
+  data() {
+    return {
+      menuItems: {
+        Orders: "Заказы",
+        Home: "Домашнаяя страница",
+        CarCard: "Карточка автомобиля",
+        CarList: "Сущности",
+        menu5: "Меню 5",
+        menu6: "Меню 6",
+        menu7: "Меню 7"
+      },
+    }
+  },
   metaInfo () {
     return { title: this.title }
   },
   computed: {
     title () {
-      return this.$route.name
+      return this.menuItems[this.$route.name]
     }
   },
 }
