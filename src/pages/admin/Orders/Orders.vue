@@ -54,7 +54,7 @@
             </v-col>
             <v-spacer />
             <v-col cols="auto">
-              <v-btn 
+              <v-btn
                 :disabled="loading"
                 @click="resetFilters()"
               >
@@ -71,6 +71,7 @@
                 :items="orders"
                 :loading="loading"
                 :items-per-page="itemsPerPage"
+                item-key="key"
                 :page.sync="page"
                 :footer-props="{
                 showFirstLastPage: true,
@@ -82,7 +83,6 @@
                   'pageText': '{0}-{1} из {2}'
                 }"
                 loading-text="Загрузка заказов, пожалуйста подождите..."
-                item-key="id"
                 @page-count="pageCount = $event"
               >
                 <template #item.info="{ item }">
@@ -124,14 +124,14 @@
                     :label="'Полный бак'"
                   />
                   <v-checkbox
-                    class="pa-0 ma-0" 
+                    class="pa-0 ma-0"
                     v-model="item.isNeedChildChair"
-                    :label="'Детское кресло'" 
+                    :label="'Детское кресло'"
                   />
                   <v-checkbox
-                    class="pa-0 ma-0" 
-                    v-model="item.isRightWheel" 
-                    :label="'Правый руль'" 
+                    class="pa-0 ma-0"
+                    v-model="item.isRightWheel"
+                    :label="'Правый руль'"
                   />
                 </template>
                 <template #item.price="{ item }">
@@ -156,7 +156,7 @@
                           width="120px"
                           outlined
                           color="black"
-                          @click="toChangeStatusToDone(item.id)"
+                          @click="toChangeStatusToDone(item.id, orders.map(function(x) {return x.id; }).indexOf(item.id))"
                         >
                           <v-icon color="green darken-2">mdi-check-bold</v-icon>
                           Готово
@@ -165,7 +165,7 @@
                           width="120px"
                           outlined
                           color="black"
-                          @click="toChangeStatusToCancel(item.id)"
+                          @click="toChangeStatusToCancel(item.id, orders.map(function(x) {return x.id; }).indexOf(item.id))"
                         >
                           <v-icon color="red">mdi-close</v-icon>
                           Отменить
@@ -183,12 +183,12 @@
                           width="120px"
                           outlined
                           color="black"
-                          @click="toEdit(item.id)"
+                          @click="toEdit(item.id, orders.map(function(x) {return x.id; }).indexOf(item.id))"
                         >
                           <v-icon color="primary">mdi-pencil</v-icon>
                           Изменить
                         </v-btn>
-                      </v-btn-toggle>   
+                      </v-btn-toggle>
                     </v-col>
                   </v-row>
                 </template>
@@ -203,6 +203,14 @@
             </v-col>
           </v-row>
         </v-card-text>
+        <v-dialog v-model="editOrderForm" max-width="700">
+          <edit-order-form
+            :key="formKey"
+            :order-id="orderId"
+            @cancel="closeForm()"
+            @success="formSuccess($event)"
+          />
+        </v-dialog>
       </v-card>
     </v-col>
   </v-row>
@@ -211,13 +219,17 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import moment from "moment";
-import cloneDeep from 'lodash/cloneDeep';
+import cloneDeep from "lodash/cloneDeep";
+import EditOrderForm from './EditOrderForm'
 
 export default {
-  name: 'Orders',
+  name: "Orders",
+  components: {
+    EditOrderForm
+  },
   data() {
     return {
-      imgDefPath: require('@/assets/default_car.jpg'),
+      imgDefPath: require("@/assets/default_car.jpg"),
       loading: true,
       page: 1,
       itemsPerPage: 5,
@@ -227,6 +239,9 @@ export default {
       statuses: [],
       rateTypes: [],
       categories: [],
+      orderId: null,
+      formKey: 1,
+      editOrderForm: false,
       filters: {
         city: null,
         status: null,
@@ -245,47 +260,47 @@ export default {
     orderHeaders () {
       return [
         {
-          value: 'photo',
-          text: 'Фото',
+          value: "photo",
+          text: "Фото",
           searchable: false,
           sortable: false,
-          width: '10%'
+          width: "10%"
         },
         {
-          value: 'info',
-          text: 'Информация',
+          value: "info",
+          text: "Информация",
           sortable: false,
-          width: '18%'
+          width: "18%"
         },
         {
-          value: 'car',
-          text: 'Автомобиль',
+          value: "car",
+          text: "Автомобиль",
           searchable: false,
           sortable: false,
-          width: '18%'
+          width: "18%"
         },
         {
-          value: 'additionals',
-          text: 'Особенности',
+          value: "additionals",
+          text: "Особенности",
           searchable: false,
           sortable: false,
-          width: '18%'
+          width: "18%"
         },
         {
-          value: 'price',
-          text: 'Сортировка цены',
-          width: '18%'
+          value: "price",
+          text: "Сортировка цены",
+          width: "18%"
         },
         {
-          value: 'actions',
-          text: '',
+          value: "actions",
+          text: "",
           searchable: false,
           sortable: false,
-          width: '18%'
+          width: "18%"
         }
       ]
     },
-    ...mapGetters("entities", 
+    ...mapGetters("entities",
       [
         "getCities",
         "getOrders",
@@ -343,11 +358,11 @@ export default {
     } else {
       this.orders = this.getOrders;
       this.loading = false;
-    }  
+    }
   },
   methods: {
     ...mapActions("entities",
-      [ 
+      [
         "fetchCities",
         "fetchOrders",
         "fetchOrderStatuses",
@@ -364,7 +379,7 @@ export default {
       } else return this.imgDefPath;
     },
     formatDate (date) {
-      return date ? moment(date).format('DD.MM.YYYY h:mm') : '';
+      return date ? moment(date).format("DD.MM.YYYY h:mm") : "";
     },
     resetFilters () {
       this.filters = cloneDeep(this.defaultFilters);
@@ -375,7 +390,7 @@ export default {
       this.loading = true;
       this.orders = this.getOrders;
       const filters = Object.values(newVal)
-      filters.forEach((value, key) => {  
+      filters.forEach((value, key) => {
         if (value !== null) {
           console.log(key, value)
           if (key === 0) {
@@ -402,17 +417,39 @@ export default {
     toDelete (id) {
       this.deleteOrder(id).then(() => {
         this.orders = this.orders.filter(item => item.id !== id);
+        this.$toast.info('Удалено');
       });
     },
     toEdit (id) {
-      this.editOrder(id);
+      this.orderId = id;
+      this.formKey++;
+      this.editOrderForm = true;
     },
-    toChangeStatusToDone (id) {
-      this.changeStatusOfOrderToDone(id);
+    formSuccess () {
+      this.closeForm();
+      // this.editOrder(id).then(() => {
+      // this.orders[key].orderStatusId.id = "5e26a1f0099b810b946c5d8b";
+      //   this.orders[key].orderStatusId.name = "Подтвержденные";
+      //   this.$toast.success('Статус изменен');
+      // });
     },
-    toChangeStatusToCancel (id) {
-      this.changeStatusOfOrderToCancel(id);
+    closeForm () {
+      this.editOrderForm = false;
+    },
+    toChangeStatusToDone (id, key) {
+      this.changeStatusOfOrderToDone(id).then(() => {
+        this.orders[key].orderStatusId.id = "5e26a1f0099b810b946c5d8b";
+        this.orders[key].orderStatusId.name = "Подтвержденные";
+        this.$toast.success('Статус изменен');
+      });
+    },
+    toChangeStatusToCancel (id, key) {
+      this.changeStatusOfOrderToCancel(id).then(() => {
+        this.orders[key].orderStatusId.id = "5e26a1f5099b810b946c5d8c";
+        this.orders[key].orderStatusId.name = "Отмененые";
+        this.$toast.success('Статус изменен');
+      });
     }
-  } 
+  }
 };
 </script>
