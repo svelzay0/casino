@@ -4,17 +4,58 @@
       <v-card-title>
         <span class="headline">{{ title }}</span>
       </v-card-title>
-      <v-row>
-        <v-col cols="12">
-          <!-- <v-textarea
-            v-model="form.comment"
-            :label="label"
+      <hr/>
+      <v-row class="pt-12">
+        <v-col cols="4">
+          <v-select
+            v-model="orderStatusId"
+            item-value="id"
+            item-text="name"
             outlined
-            :error-messages="form.errors.get('comment')"
+            :items="statuses"
+            :label="'Статус заказа'"
+          />
+        </v-col>
+        <v-col cols="4">
+          <v-text-field
+            v-model="orderItem.price"
+            :label="'Цена заказа'"
+            v-mask="'##########'"
+            outlined
             clearable
-            counter
             required
-          /> -->
+          />
+        </v-col>
+        <v-col cols="4">
+          <v-text-field
+            v-model="orderItem.color"
+            :label="'Цвет автомобиля'"
+            outlined
+            clearable
+            required
+          />
+        </v-col>
+        <v-col cols="4">
+          <v-checkbox
+            class="pa-0 ma-0"
+            x-large
+            v-model="orderItem.isRightWheel"
+            :label="'Правый руль'"
+          />
+        </v-col> 
+        <v-col cols="4">
+          <v-checkbox
+            class="pa-0 ma-0"
+            v-model="orderItem.isFullTank"
+            :label="'Полный бак'"
+          />
+        </v-col>
+        <v-col cols="4">
+          <v-checkbox
+            class="pa-0 ma-0"
+            v-model="orderItem.isNeedChildChair"
+            :label="'Детское кресло'"
+          />
         </v-col>
       </v-row>
       <v-spacer/>
@@ -37,47 +78,40 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 
 export default {
   name: 'EditOrderForm',
   props: {
-    orderId: {
-      type: String,
+    orderItem: {
+      type: Object,
+      required: true
+    },
+    statuses: {
+      type: Array,
       required: true
     }
   },
   data () {
     return {
-      order: null,
-      ...mapGetters("entities",
-      [
-        "getOrders"
-      ])
+      orderStatusId: null
     }
+  },
+  created () {
+    this.orderStatusId = this.orderItem.orderStatusId;
   },
   computed: {
     title: function () {
-      return 'Редактировать заказ ' + this.orderId
+      return 'Редактировать заказ ' + this.orderItem.id;
     }
-  },
-  created() {
-    const orders = this.getOrders;
-      this.order = orders.filter(item => item.id === this.orderId);
-    // this.getOrder();
   },
   methods: {
     submit () {
-      this.$toast.success(this.$t('saved'))
-      this.$emit('success')
-    },
-    getOrder () {
-      console.log(this.getOrders, this.orderId, this.order);
-      const orders = this.getOrders;
-      this.order = orders.filter(item => item.id === this.orderId);
-      // const filteredOrders = this.orders.filter(item => item.rateId);
-      // this.order = this.getOrders.filter(item => item.id === this.orderId);
-      console.log(this.orderId, this.order);
+      this.statuses.forEach((element) => {
+        if (element.id === this.orderStatusId) {
+          this.orderItem.orderStatusId = element;
+        }
+      })
+      this.$emit('success', this.orderItem);
     }
   }
 }

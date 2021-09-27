@@ -75,9 +75,10 @@ export default {
         handleError(e);
       }
     },
-    async editOrder(context, id) {
+    async editOrder(context, item) {
       try {
-        await axios(ApiRequest("put",`${process.env.VUE_APP_API_PROD}/order/${id}`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token")));
+        const data = item
+        await axios(ApiRequest("put",`${process.env.VUE_APP_API_PROD}/order/${item.id}`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token"), data));
       } catch (e) {
         handleError(e);
       }

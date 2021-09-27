@@ -100,19 +100,19 @@
                 </template>
                 <template #item.car="{ item }">
                   <v-row>
-                    <v-col cols="12"  class="ma-0 pa-0 pl-3">
+                    <v-col cols="12"  class="ma-0 pa-0">
                       Статус <b>{{ item.orderStatusId ? item.orderStatusId.name : '-' }}</b>
                     </v-col>
-                    <v-col cols="12"  class="ma-0 pa-0 pl-3">
+                    <v-col cols="12"  class="ma-0 pa-0">
                       Тариф <b>{{ item.rateId ? (item.rateId.rateTypeId ? item.rateId.rateTypeId.name : '-') : '-' }}</b>
                     </v-col>
-                    <v-col cols="12" class="pb-0 mb-0">
+                    <v-col cols="12" class="ma-0 pa-0">
                       Модель <b>{{ item.carId ? item.carId.name : '-' }}</b>
                     </v-col>
-                    <v-col cols="12"  class="ma-0 pa-0 pl-3">
+                    <v-col cols="12"  class="ma-0 pa-0">
                       Категория <b>{{ item.carId ? (item.carId.categoryId ? item.carId.categoryId.name : '-') : '-' }}</b>
                     </v-col>
-                    <v-col cols="12" class="pt-0 mt-0">
+                    <v-col cols="12" class="ma-0 pa-0">
                       Номер <b class="primary--text">{{ item.carId ? item.carId.number : '-' }}</b>
                     </v-col>
                   </v-row>
@@ -122,16 +122,19 @@
                     class="pa-0 ma-0 pt-6"
                     v-model="item.isFullTank"
                     :label="'Полный бак'"
+                    disabled
                   />
                   <v-checkbox
                     class="pa-0 ma-0"
                     v-model="item.isNeedChildChair"
                     :label="'Детское кресло'"
+                    disabled
                   />
                   <v-checkbox
                     class="pa-0 ma-0"
                     v-model="item.isRightWheel"
                     :label="'Правый руль'"
+                    disabled
                   />
                 </template>
                 <template #item.price="{ item }">
@@ -183,7 +186,7 @@
                           width="120px"
                           outlined
                           color="black"
-                          @click="toEdit(item.id, orders.map(function(x) {return x.id; }).indexOf(item.id))"
+                          @click="toEdit(item, orders.map(function(x) {return x.id; }).indexOf(item.id))"
                         >
                           <v-icon color="primary">mdi-pencil</v-icon>
                           Изменить
@@ -194,7 +197,7 @@
                 </template>
               </v-data-table>
             </v-col>
-            <v-col cols="6" class="pl-10 pr-10">
+            <v-col cols="6" class="pl-10 pr-10 pb-16">
               <v-pagination
                 v-model="page"
                 :length="pageCount"
@@ -206,7 +209,8 @@
         <v-dialog v-model="editOrderForm" max-width="700">
           <edit-order-form
             :key="formKey"
-            :order-id="orderId"
+            :order-item="orderItem"
+            :statuses="statuses"
             @cancel="closeForm()"
             @success="formSuccess($event)"
           />
@@ -239,7 +243,8 @@ export default {
       statuses: [],
       rateTypes: [],
       categories: [],
-      orderId: null,
+      orderItem: null,
+      orderKey: null,
       formKey: 1,
       editOrderForm: false,
       filters: {
@@ -353,7 +358,6 @@ export default {
       this.fetchOrders().then(() => {
         this.loading = false;
         this.orders = this.getOrders;
-        console.log(this.cities, this.statuses, this.rateTypes, this.categories, this.orders); // получили сущности
       });
     } else {
       this.orders = this.getOrders;
@@ -392,7 +396,6 @@ export default {
       const filters = Object.values(newVal)
       filters.forEach((value, key) => {
         if (value !== null) {
-          console.log(key, value)
           if (key === 0) {
             const filteredOrders = this.orders.filter(item => item.cityId);
             this.orders = filteredOrders.filter(item => item.cityId.id === newVal.city);
@@ -420,18 +423,18 @@ export default {
         this.$toast.info('Удалено');
       });
     },
-    toEdit (id) {
-      this.orderId = id;
+    toEdit (item, key) {
+      this.orderItem = item;
+      this.orderKey = key;
       this.formKey++;
       this.editOrderForm = true;
     },
-    formSuccess () {
+    formSuccess (item) {
       this.closeForm();
-      // this.editOrder(id).then(() => {
-      // this.orders[key].orderStatusId.id = "5e26a1f0099b810b946c5d8b";
-      //   this.orders[key].orderStatusId.name = "Подтвержденные";
-      //   this.$toast.success('Статус изменен');
-      // });
+      this.editOrder(item).then(() => {
+        this.orders[this.orderKey] = item;
+        this.$toast.success('Успешно редактировано');
+      });
     },
     closeForm () {
       this.editOrderForm = false;

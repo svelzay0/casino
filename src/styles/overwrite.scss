@@ -29,6 +29,10 @@
 .admin__footer_links {
   height: 70px;
 }
+.v-data-table__wrapper {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
 
 // desktop-min (1024px - 1023px)
 @media screen and (max-width: $desktop-min) {
