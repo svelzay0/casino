@@ -1,0 +1,104 @@
+@import "variables";
+@import "overwrite";
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+.fill-height {
+  background-color: $main-whitesmoke;
+}
+.auth__logo_text {
+  color: $main-text-color;
+  font-weight: 600;
+}
+.auth__form_login {
+  font-weight: 400;
+  color: $main-text-color;
+  font-size: 17.5px;
+  line-height: 20px;
+}
+.auth__form_tip {
+  color: $main-dark-gray;
+  font-size: 12.5px;
+}
+.auth__form_link_text {
+  color: $main-light-blue;
+  text-decoration: none;
+  font-size: 12.5px;
+  line-height: 12px;
+}
+.auth__form_link_text:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.auth__form_btn_text {
+  font-weight: 400;
+  color: $main-white;
+  font-size: 12.5px;
+}
+.app {
+  background-color: $main-whitesmoke;
+}
+.auth__logo_text {
+  color: $main-text-color;
+  font-weight: 400;
+}
+.admin__footer_links {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.footer_left_text {
+  font-size: 14px;
+  line-height: 16px;
+  color: $main-blue;
+  margin-right: 16px;
+  padding-left: 280px;
+  cursor: pointer;
+}
+.footer_left_text_v2 {
+  font-size: 14px;
+  line-height: 16px;
+  color: $main-blue;
+  margin-right: 16px;
+  cursor: pointer;
+}
+.footer_right {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: $main-text-color;
+}
+.main__title {
+  color: $main-text-color;
+}
+
+// desktop-min (1024px - 1023px)
+@media screen and (max-width: $desktop-min) {
+  .footer_left_text {
+    padding-left: 20px;
+  }
+}
+
+// tablet (768px - 1023px)
+@media screen and (max-width: $tablet) {
+  // content
+}
+
+// mobile (320px - 767px)
+@media screen and (max-width: $mobile) {
+  .search {
+    display: none;
+  }
+  .footer_left_text {
+    display: none;
+  }
+  .footer_left_text_v2 {
+    display: none;
+  }
+}
+
+// kettle (0px - 320px)
+@media screen and (max-width: $kettle) {
+  .avatar {
+    display: none;
+  }
+}

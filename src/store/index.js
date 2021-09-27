@@ -1,15 +1,18 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
+import user from "@/store/user";
+import shared from "@/store/shared";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
+const store = new Vuex.Store({
+  state: {},
+  mutations: {},
+  actions: {},
   modules: {
-  }
-})
+    user,
+    shared
+  },
+});
+
+export default store
