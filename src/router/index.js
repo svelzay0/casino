@@ -39,7 +39,7 @@ const routes = [
         path: "orders",
         name: "Orders",
         beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/Orders"),
+        component: () => import("../pages/admin/Orders/Orders.vue"),
       },
       {
         path: "menu5",

@@ -70,6 +70,10 @@
 .main__title {
   color: $main-text-color;
 }
+.model__car_image {
+  width: 128px;
+  height: 58px;
+}
 
 // desktop-min (1024px - 1023px)
 @media screen and (max-width: $desktop-min) {
@@ -80,7 +84,9 @@
 
 // tablet (768px - 1023px)
 @media screen and (max-width: $tablet) {
-  // content
+  .order__table_circles {
+    display: none;
+  }
 }
 
 // mobile (320px - 767px)
@@ -94,11 +100,17 @@
   .footer_left_text_v2 {
     display: none;
   }
+  .order__table_circles {
+    display: none;
+  }
 }
 
 // kettle (0px - 320px)
 @media screen and (max-width: $kettle) {
   .avatar {
+    display: none;
+  }
+  .order__table_circles {
     display: none;
   }
 }
