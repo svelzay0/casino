@@ -31,9 +31,9 @@ const routes = [
       },
       {
         path: "list",
-        name: "CarList",
+        name: "list",
         beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/CarList"),
+        component: () => import("../pages/admin/list"),
       },
       {
         path: "orders",

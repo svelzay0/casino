@@ -83,8 +83,8 @@ export default {
           ico: 'mdi-pencil'
         },
         {
-          title: 'Список авто',
-          to: { name: 'CarList' },
+          title: 'Сущности',
+          to: { name: 'List' },
           ico: 'mdi-clipboard-list'
         },
         {
