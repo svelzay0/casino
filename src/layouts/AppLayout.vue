@@ -42,7 +42,7 @@ export default {
   },
   computed: {
     title () {
-      return this.menuItems[this.$route.name].name
+      return this.menuItems[this.$route.name] ? this.menuItems[this.$route.name].name : 'Добро пожаловать!'
     }
   },
 }
