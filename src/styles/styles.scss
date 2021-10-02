@@ -77,6 +77,9 @@
 .order__actions {
   width: 120px;
 }
+.entity__create_btn {
+  width: auto;
+}
 
 // desktop(1466px - 2048px)
 @media screen and (max-width: $desktop) {

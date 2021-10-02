@@ -371,38 +371,27 @@ export default {
       this.fetchCities().then(() => {
         this.cities = this.getCities;
       });
-    } else {
-      this.cities = this.getCities;
     }
     if (this.getOrderStatuses.length === 0) {
       this.fetchOrderStatuses().then(() => {
         this.statuses = this.getOrderStatuses;
       });
-    } else {
-      this.statuses = this.getOrderStatuses;
     }
     if (this.getCategories.length === 0) {
       this.fetchCategories().then(() => {
         this.categories = this.getCategories;
       });
-    } else {
-      this.categories = this.getCategories;
     }
     if (this.getRateTypes.length === 0) {
       this.fetchRateTypes().then(() => {
         this.rateTypes = this.getRateTypes;
       });
-    } else {
-      this.rateTypes = this.getRateTypes;
     }
     if (this.getOrders.length === 0) {
       this.fetchOrders().then(() => {
         this.loading = false;
         this.orders = this.getOrders;
       });
-    } else {
-      this.orders = this.getOrders;
-      this.loading = false;
     }
   },
   methods: {
@@ -474,7 +463,7 @@ export default {
       this.closeForm();
       this.editOrder(item).then(() => {
         this.orders[this.orderKey] = item;
-        this.$toast.success('Успешно редактировано');
+        this.$toast.success('Успешно отредактировано');
       });
     },
     closeForm () {

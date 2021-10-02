@@ -5,14 +5,19 @@ export default {
   namespaced: true,
   state: {
     cities: [],
+    points: [],
     orders: [],
     orderStatuses: [],
     categories: [],
+    rates: [],
     rateTypes: []
   },
   mutations: {
     setCities(state, payload) {
       state.cities = payload;
+    },
+    setPoints(state, payload) {
+      state.points = payload;
     },
     setOrders(state, payload) {
       state.orders = payload;
@@ -23,6 +28,9 @@ export default {
     setCategories(state, payload) {
       state.categories = payload;
     },
+    setRates(state, payload) {
+      state.rates = payload;
+    },
     setRateTypes(state, payload) {
       state.rateTypes = payload;
     }
@@ -32,6 +40,14 @@ export default {
       try {
         const { data } = await axios(ApiRequest("get", "/city"));
         context.commit("setCities", data.data);
+      } catch (e) {
+        handleError(e);
+      }
+    },
+    async fetchPoints(context) {
+      try {
+        const { data } = await axios(ApiRequest("get", "/point"));
+        context.commit("setPoints", data.data);
       } catch (e) {
         handleError(e);
       }
@@ -60,6 +76,14 @@ export default {
         handleError(e);
       }
     },
+    async fetchRates(context) {
+      try {
+        const { data } = await axios(ApiRequest("get", "/rate"));
+        context.commit("setRates", data.data);
+      } catch (e) {
+        handleError(e);
+      }
+    },
     async fetchRateTypes(context) {
       try {
         const { data } = await axios(ApiRequest("get", "/rateType"));
@@ -77,8 +101,16 @@ export default {
     },
     async editOrder(context, item) {
       try {
-        const data = item
-        await axios(ApiRequest("put",`/order/${item.id}`, data));
+        await axios(ApiRequest("put", `/order/${item.id}`, item));
+      } catch (e) {
+        handleError(e);
+      }
+    },
+    async editEntity(context, item) {
+      const entityItem = item.item
+      const entityName = item.entityName
+      try {
+        await axios(ApiRequest("put", '/' + entityName + '/' + entityItem.id, entityItem));
       } catch (e) {
         handleError(e);
       }
@@ -108,6 +140,9 @@ export default {
     getCities(state) {
       return state.cities;
     },
+    getPoints(state) {
+      return state.points;
+    },
     getOrders(state) {
       return state.orders;
     },
@@ -116,6 +151,9 @@ export default {
     },
     getCategories(state) {
       return state.categories;
+    },
+    getRates(state) {
+      return state.rates;
     },
     getRateTypes(state) {
       return state.rateTypes;

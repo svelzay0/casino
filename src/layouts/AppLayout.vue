@@ -10,7 +10,9 @@
             </span>
           </div>
         </div>
-        <router-view />
+        <keep-alive>
+          <router-view />
+        </keep-alive>
       </v-container>
     </v-main>
   </v-app>
@@ -30,15 +32,12 @@ export default {
         Orders: {name: 'Заказы', url: '/orders'},
         Home: {name: 'Домашнаяя страница', url: '/home'},
         CarCard: {name: 'Карточка автомобиля', url: '/car'},
-        List: {name: 'Сущности', url: '/list'},
+        Entities: {name: 'Сущности', url: '/entities'},
         Menu5: {name: 'Меню 5', url: '/menu5'},
         Menu6: {name: 'Меню 6', url: '/menu6'},
         Menu7: {name: 'Меню 7', url: '/menu7'}
       },
     }
-  },
-  metaInfo () {
-    return { title: this.title }
   },
   computed: {
     title () {
