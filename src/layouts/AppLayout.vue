@@ -30,7 +30,7 @@ export default {
         Orders: {name: 'Заказы', url: '/orders'},
         Home: {name: 'Домашнаяя страница', url: '/home'},
         CarCard: {name: 'Карточка автомобиля', url: '/car'},
-        CarList: {name: 'Сущности', url: '/list'},
+        List: {name: 'Сущности', url: '/list'},
         Menu5: {name: 'Меню 5', url: '/menu5'},
         Menu6: {name: 'Меню 6', url: '/menu6'},
         Menu7: {name: 'Меню 7', url: '/menu7'}
@@ -42,7 +42,7 @@ export default {
   },
   computed: {
     title () {
-      return this.menuItems[this.$route.name].name
+      return this.menuItems[this.$route.name] ? this.menuItems[this.$route.name].name : 'Добро пожаловать!'
     }
   },
 }
