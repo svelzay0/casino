@@ -18,7 +18,7 @@
         </v-col>
         <v-col cols="4">
           <v-text-field
-            v-model="orderItem.price"
+            v-model="price"
             :label="'Цена заказа'"
             v-mask="'##########'"
             outlined
@@ -28,7 +28,7 @@
         </v-col>
         <v-col cols="4">
           <v-text-field
-            v-model="orderItem.color"
+            v-model="color"
             :label="'Цвет автомобиля'"
             outlined
             clearable
@@ -39,21 +39,21 @@
           <v-checkbox
             class="pa-0 ma-0"
             x-large
-            v-model="orderItem.isRightWheel"
+            v-model="isRightWheel"
             :label="'Правый руль'"
           />
-        </v-col> 
+        </v-col>
         <v-col cols="4">
           <v-checkbox
             class="pa-0 ma-0"
-            v-model="orderItem.isFullTank"
+            v-model="isFullTank"
             :label="'Полный бак'"
           />
         </v-col>
         <v-col cols="4">
           <v-checkbox
             class="pa-0 ma-0"
-            v-model="orderItem.isNeedChildChair"
+            v-model="isNeedChildChair"
             :label="'Детское кресло'"
           />
         </v-col>
@@ -93,14 +93,24 @@ export default {
   },
   data () {
     return {
-      orderStatusId: null
+      orderStatusId: null,
+      price: null,
+      color: null,
+      isRightWheel: null,
+      isFullTank: null,
+      isNeedChildChair: null
     }
   },
   created () {
     this.orderStatusId = this.orderItem.orderStatusId;
+    this.price = this.orderItem.price
+    this.color = this.orderItem.color
+    this.isRightWheel = this.orderItem.isRightWheel
+    this.isFullTank = this.orderItem.isFullTank
+    this.isNeedChildChair = this.orderItem.isNeedChildChair
   },
   computed: {
-    title: function () {
+    title () {
       return 'Редактировать заказ ' + this.orderItem.id;
     }
   },
@@ -111,6 +121,11 @@ export default {
           this.orderItem.orderStatusId = element;
         }
       })
+      this.orderItem.price = this.price
+      this.orderItem.color = this.color
+      this.orderItem.isRightWheel = this.isRightWheel
+      this.orderItem.isFullTank = this.isFullTank
+      this.orderItem.isNeedChildChair = this.isNeedChildChair
       this.$emit('success', this.orderItem);
     }
   }

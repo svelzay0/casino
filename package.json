@@ -10,11 +10,9 @@
   "dependencies": {
     "axios": "^0.21.4",
     "core-js": "^3.6.5",
-    "moment": "^2.29.1",
-    "v-mask": "^2.2.4",
+    "v-mask": "^2.3.0",
     "vform": "^2.1.1",
     "vue": "^2.6.11",
-    "vue-moment": "^4.1.0",
     "vue-router": "^3.2.0",
     "vue-toastification": "^1.7.11",
     "vuetify": "^2.4.0",

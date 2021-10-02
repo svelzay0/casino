@@ -85,39 +85,36 @@
                 loading-text="Загрузка заказов, пожалуйста подождите..."
                 @page-count="pageCount = $event"
               >
-                <template #item.info="{ item }">
+                <template #[`item.info`]="{ item }">
                   <v-row>
-                    <v-col cols="12" class="pb-0 mb-0">
+                    <v-col cols="12" class="order__addition_info pb-0 mb-0">
                       г. {{ item.cityId ? item.cityId.name : '-' }}
                     </v-col>
-                    <v-col cols="12"  class="ma-0 pa-0 pl-3">
+                    <v-col cols="12" class="ma-0 pa-0 pl-3">
                       {{ item.dateFrom ? formatDate(item.dateFrom) : '-' }} - {{ item.dateTo ? formatDate(item.dateTo) : '-' }}
                     </v-col>
-                    <v-col cols="12" class="pt-0 mt-0">
+                    <v-col cols="12" class="order__addition_info pt-0 mt-0">
                       Цвет <b>{{ item.color ? item.color : '-' }}</b>
                     </v-col>
                   </v-row>
                 </template>
-                <template #item.car="{ item }">
+                <template #[`item.car`]="{ item }">
                   <v-row>
-                    <v-col cols="12"  class="ma-0 pa-0">
-                      Статус <b>{{ item.orderStatusId ? item.orderStatusId.name : '-' }}</b>
+                    <v-col cols="12" class="ma-0 pa-0">
+                      Статус <b>{{ item.orderStatusId ? (truncate(item.orderStatusId.name,5)) : '-' }}</b>
                     </v-col>
-                    <v-col cols="12"  class="ma-0 pa-0">
+                    <v-col cols="12" class="order__addition_info ma-0 pa-0">
                       Тариф <b>{{ item.rateId ? (item.rateId.rateTypeId ? item.rateId.rateTypeId.name : '-') : '-' }}</b>
                     </v-col>
-                    <v-col cols="12" class="ma-0 pa-0">
-                      Модель <b>{{ item.carId ? item.carId.name : '-' }}</b>
-                    </v-col>
-                    <v-col cols="12"  class="ma-0 pa-0">
+                    <v-col cols="12" class="order__addition_info ma-0 pa-0">
                       Категория <b>{{ item.carId ? (item.carId.categoryId ? item.carId.categoryId.name : '-') : '-' }}</b>
                     </v-col>
-                    <v-col cols="12" class="ma-0 pa-0">
+                    <v-col cols="12" class="order__addition_info ma-0 pa-0">
                       Номер <b class="primary--text">{{ item.carId ? item.carId.number : '-' }}</b>
                     </v-col>
                   </v-row>
                 </template>
-                <template #item.additionals="{ item }">
+                <template #[`item.additionals`]="{ item }">
                   <v-checkbox
                     class="pa-0 ma-0 pt-6"
                     v-model="item.isFullTank"
@@ -137,67 +134,103 @@
                     disabled
                   />
                 </template>
-                <template #item.price="{ item }">
+                <template #[`item.price`]="{ item }">
                   <div>
                     <v-card-title>{{ item.price ? item.price + ' ₽' : '-' }}</v-card-title>
                   </div>
                 </template>
-                <template #item.photo="{ item }">
+                <template #[`item.photo`]="{ item }">
                   <img
                     class="model__car_image"
                     :src="getImgPath(item.carId)"
                     alt=""
                   />
                 </template>
-                <template #item.actions="{ item }">
+                <template #[`item.actions`]="{ item }">
                   <v-row>
                     <v-col cols="12">
                       <v-btn-toggle
                         dense
                       >
-                        <v-btn
-                          width="120px"
-                          outlined
-                          color="black"
-                          @click="toChangeStatusToDone(item.id, orders.map(function(x) {return x.id; }).indexOf(item.id))"
+                        <v-tooltip
+                          bottom
                         >
-                          <v-icon color="green darken-2">mdi-check-bold</v-icon>
-                          Готово
-                        </v-btn>
-                        <v-btn
-                          width="120px"
-                          outlined
-                          color="black"
-                          @click="toChangeStatusToCancel(item.id, orders.map(function(x) {return x.id; }).indexOf(item.id))"
+                          <template #activator="{ on, attrs }">
+                            <v-btn
+                              class="order__actions"
+                              v-bind="attrs"
+                              outlined
+                              color="black"
+                              v-on="on"
+                              @click="toChangeStatusToDone(item.id, orders.map(function(x) {return x.id; }).indexOf(item.id))"
+                            >
+                              <v-icon color="green darken-2">mdi-check-bold</v-icon>
+                              <span class="order__actions_text">Готово</span>
+                            </v-btn>
+                          </template>
+                          <span>{{ 'Готово' }}</span>
+                        </v-tooltip>
+                        <v-tooltip
+                          bottom
                         >
-                          <v-icon color="red">mdi-close</v-icon>
-                          Отменить
-                        </v-btn>
-                        <v-btn
-                          width="120px"
-                          outlined
-                          color="black"
-                          @click="toDelete(item.id)"
+                          <template #activator="{ on, attrs }">
+                            <v-btn
+                              class="order__actions"
+                              v-bind="attrs"
+                              outlined
+                              color="black"
+                              v-on="on"
+                              @click="toChangeStatusToCancel(item.id, orders.map(function(x) {return x.id; }).indexOf(item.id))"
+                            >
+                              <v-icon color="red">mdi-close</v-icon>
+                              <span class="order__actions_text">Отменить</span>
+                            </v-btn>
+                          </template>
+                          <span>{{ 'Отменить' }}</span>
+                        </v-tooltip>
+                        <v-tooltip
+                          bottom
                         >
-                          <v-icon color="red">mdi-delete</v-icon>
-                          Удалить
+                          <template #activator="{ on, attrs }">
+                            <v-btn
+                              class="order__actions"
+                              v-bind="attrs"
+                              outlined
+                              color="black"
+                              v-on="on"
+                              @click="toDelete(item.id)"
+                            >
+                              <v-icon color="red">mdi-delete</v-icon>
+                              <span class="order__actions_text">Удалить</span>
                         </v-btn>
-                        <v-btn
-                          width="120px"
-                          outlined
-                          color="black"
-                          @click="toEdit(item, orders.map(function(x) {return x.id; }).indexOf(item.id))"
+                          </template>
+                          <span>{{ 'Удалить' }}</span>
+                        </v-tooltip>
+                        <v-tooltip
+                          bottom
                         >
-                          <v-icon color="primary">mdi-pencil</v-icon>
-                          Изменить
-                        </v-btn>
+                          <template #activator="{ on, attrs }">
+                            <v-btn
+                              class="order__actions"
+                              v-bind="attrs"
+                              outlined
+                              color="black"
+                              v-on="on"
+                              @click="toEdit(item, orders.map(function(x) {return x.id; }).indexOf(item.id))"
+                            >
+                              <v-icon color="primary">mdi-pencil</v-icon>
+                              <span class="order__actions_text">Изменить</span>
+                            </v-btn>
+                          </template>
+                          <span>{{ 'Изменить' }}</span>
+                        </v-tooltip>
                       </v-btn-toggle>
                     </v-col>
                   </v-row>
                 </template>
               </v-data-table>
             </v-col>
-            <v-col cols="6" class="pl-10 pr-10 pb-16">
+            <v-col cols="6" class="order__table_circles pl-10 pr-10 pb-16">
               <v-pagination
                 v-model="page"
                 :length="pageCount"
@@ -222,7 +255,6 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import moment from "moment";
 import cloneDeep from "lodash/cloneDeep";
 import EditOrderForm from './EditOrderForm'
 
@@ -247,6 +279,8 @@ export default {
       orderKey: null,
       formKey: 1,
       editOrderForm: false,
+      doneStatus: null,
+      cancelStatus: null,
       filters: {
         city: null,
         status: null,
@@ -258,6 +292,13 @@ export default {
         status: null,
         category: null,
         rateType: null
+      },
+      dateSettings: {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
       }
     }
   },
@@ -273,13 +314,13 @@ export default {
         },
         {
           value: "info",
-          text: "Информация",
+          text: "Инфо",
           sortable: false,
           width: "18%"
         },
         {
           value: "car",
-          text: "Автомобиль",
+          text: "Статус",
           searchable: false,
           sortable: false,
           width: "18%"
@@ -293,7 +334,7 @@ export default {
         },
         {
           value: "price",
-          text: "Сортировка цены",
+          text: "Сорт. цены",
           width: "18%"
         },
         {
@@ -383,7 +424,7 @@ export default {
       } else return this.imgDefPath;
     },
     formatDate (date) {
-      return date ? moment(date).format("DD.MM.YYYY h:mm") : "";
+      return new Date(date).toLocaleString([], this.dateSettings);
     },
     resetFilters () {
       this.filters = cloneDeep(this.defaultFilters);
@@ -440,18 +481,34 @@ export default {
       this.editOrderForm = false;
     },
     toChangeStatusToDone (id, key) {
-      this.changeStatusOfOrderToDone(id).then(() => {
-        this.orders[key].orderStatusId.id = "5e26a1f0099b810b946c5d8b";
-        this.orders[key].orderStatusId.name = "Подтвержденные";
+      this.statuses.forEach((status) => {
+        if (status.name === "Подтвержденные") {
+          this.doneStatus = status;
+        }
+      })
+      this.changeStatusOfOrderToDone(id, this.doneStatus).then(() => {
+        this.orders[key].orderStatusId = this.doneStatus;
         this.$toast.success('Статус изменен');
       });
     },
     toChangeStatusToCancel (id, key) {
-      this.changeStatusOfOrderToCancel(id).then(() => {
-        this.orders[key].orderStatusId.id = "5e26a1f5099b810b946c5d8c";
-        this.orders[key].orderStatusId.name = "Отмененые";
+      this.statuses.forEach((status) => {
+        if (status.name === "Отмененые") {
+          this.cancelStatus = status;
+        }
+      })
+      this.changeStatusOfOrderToCancel(id, this.cancelStatus).then(() => {
+        this.orders[key].orderStatusId = this.cancelStatus;
         this.$toast.success('Статус изменен');
       });
+    },
+    truncate (string, limit) {
+      if(string.length > limit){
+        return string.substring(0,limit)+"...";
+      }
+      else {
+        return string;
+      }
     }
   }
 };

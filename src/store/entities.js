@@ -30,7 +30,7 @@ export default {
   actions: {
     async fetchCities(context) {
       try {
-        const { data } = await axios(ApiRequest("get", `${process.env.VUE_APP_API_PROD}/city`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token")));
+        const { data } = await axios(ApiRequest("get", "/city"));
         context.commit("setCities", data.data);
       } catch (e) {
         handleError(e);
@@ -38,7 +38,7 @@ export default {
     },
     async fetchOrders(context) {
       try {
-        const { data } = await axios(ApiRequest("get", `${process.env.VUE_APP_API_PROD}/order`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token")));
+        const { data } = await axios(ApiRequest("get", "/order"));
         context.commit("setOrders", data.data);
       } catch (e) {
         handleError(e);
@@ -46,7 +46,7 @@ export default {
     },
     async fetchOrderStatuses(context) {
       try {
-        const { data } = await axios(ApiRequest("get", `${process.env.VUE_APP_API_PROD}/orderStatus`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token")));
+        const { data } = await axios(ApiRequest("get", "/orderStatus"));
         context.commit("setOrderStatuses", data.data);
       } catch (e) {
         handleError(e);
@@ -54,7 +54,7 @@ export default {
     },
     async fetchCategories(context) {
       try {
-        const { data } = await axios(ApiRequest("get", `${process.env.VUE_APP_API_PROD}/category`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token")));
+        const { data } = await axios(ApiRequest("get", "/category"));
         context.commit("setCategories", data.data);
       } catch (e) {
         handleError(e);
@@ -62,7 +62,7 @@ export default {
     },
     async fetchRateTypes(context) {
       try {
-        const { data } = await axios(ApiRequest("get", `${process.env.VUE_APP_API_PROD}/rateType`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token")));
+        const { data } = await axios(ApiRequest("get", "/rateType"));
         context.commit("setRateTypes", data.data);
       } catch (e) {
         handleError(e);
@@ -70,7 +70,7 @@ export default {
     },
     async deleteOrder(context, id) {
       try {
-        await axios(ApiRequest("delete", `${process.env.VUE_APP_API_PROD}/order/${id}`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token")));
+        await axios(ApiRequest("delete", `/order/${id}`));
       } catch (e) {
         handleError(e);
       }
@@ -78,33 +78,27 @@ export default {
     async editOrder(context, item) {
       try {
         const data = item
-        await axios(ApiRequest("put",`${process.env.VUE_APP_API_PROD}/order/${item.id}`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token"), data));
+        await axios(ApiRequest("put",`/order/${item.id}`, data));
       } catch (e) {
         handleError(e);
       }
     },
-    async changeStatusOfOrderToCancel(context, id) {
+    async changeStatusOfOrderToCancel(context, id, status) {
       try {
         const data = {
-          orderStatusId: {
-            id: "5e26a1f5099b810b946c5d8c",
-            name: "Отмененые"
-          }
+          orderStatusId: status
         }
-        await axios(ApiRequest("put", `${process.env.VUE_APP_API_PROD}/order/${id}`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token"), data));
+        await axios(ApiRequest("put", `/order/${id}`, data));
       } catch (e) {
         handleError(e);
       }
     },
-    async changeStatusOfOrderToDone(context, id) {
+    async changeStatusOfOrderToDone(context, id, status) {
       try {
         const data = {
-          orderStatusId: {
-            id: "5e26a1f0099b810b946c5d8b",
-            name: "Подтвержденные"
-          }
+          orderStatusId: status
         }
-        await axios(ApiRequest("put", `${process.env.VUE_APP_API_PROD}/order/${id}`, process.env["VUE_APP_API_FACTORY_ID"], "Bearer ", localStorage.getItem("token"), data));
+        await axios(ApiRequest("put", `/order/${id}`, data));
       } catch (e) {
         handleError(e);
       }
@@ -129,14 +123,14 @@ export default {
   },
 };
 
-const ApiRequest = (method, url, api, prefix, token, data = null) => {
+const ApiRequest = (method, url, data = null) => {
   return {
-    url: url,
+    url: process.env.VUE_APP_API_PROD + url,
     method: method,
     headers: {
-      "X-Api-Factory-Application-Id": api,
+      "X-Api-Factory-Application-Id": process.env["VUE_APP_API_FACTORY_ID"],
       Accept: "application/json",
-      "Authorization": prefix + token
+      "Authorization": "Bearer " + localStorage.getItem("token")
     },
     data: data
   }
