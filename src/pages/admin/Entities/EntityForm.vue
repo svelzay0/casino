@@ -105,11 +105,15 @@
 <script>
 
 export default {
-  name: 'EditEntityForm',
+  name: 'EntityForm',
   props: {
     entity: {
       type: Object,
-      default: this.emptyObj()
+      default: () => {}
+    },
+    method: {
+      type: String,
+      required: true
     },
     tableName: {
       type: String,
@@ -138,31 +142,38 @@ export default {
       unit: '',
       city: null,
       rateType: null,
-      description: ''
+      description: '',
+      creatingEntity: {}
     }
   },
   created () {
-    if (this.entity)
-    if (this.tableName !== 'rates') {
-      this.name = this.entity.name
-    } else if (this.tableName === 'rates') {
-      this.price = this.entity.price
-      this.rateType = this.entity.rateTypeId
-    }
-    if (this.tableName === 'points') {
-      this.address = this.entity.address
-      this.city = this.entity.cityId
-    }
-    if (this.tableName === 'categories') {
-      this.description = this.entity.description
-    }
-    if (this.tableName === 'rateTypes') {
-      this.unit = this.entity.unit
+    console.log(this.entity)
+    if (this.method === 'edit') {
+      if (this.tableName !== 'rates') {
+        this.name = this.entity.name
+      } else if (this.tableName === 'rates') {
+        this.price = this.entity.price
+        this.rateType = this.entity.rateTypeId
+      }
+      if (this.tableName === 'points') {
+        this.address = this.entity.address
+        this.city = this.entity.cityId
+      }
+      if (this.tableName === 'categories') {
+        this.description = this.entity.description
+      }
+      if (this.tableName === 'rateTypes') {
+        this.unit = this.entity.unit
+      }
     }
   },
   computed: {
     title () {
-      return 'Редактировать сущность из таблицы ' + this.tableName;
+      if (this.method === 'edit') {
+        return 'Редактировать сущность из таблицы ' + this.tableName;
+      } else {
+        return 'Создать сущность в таблице ' + this.tableName;
+      }
     }
   },
   methods: {
@@ -191,10 +202,11 @@ export default {
       if (this.tableName === 'rateTypes') {
         this.entity.unit = this.unit
       }
-      this.$emit('success', this.entity, this.tableName);
-    },
-    emptyObj() {
-      return {}
+      if (this.method === 'edit') {
+        this.$emit('successEdit', this.entity, this.tableName);
+      } else {
+        this.$emit('successCreate', this.entity, this.tableName);
+      }
     }
   }
 }

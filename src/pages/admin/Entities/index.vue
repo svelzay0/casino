@@ -147,15 +147,17 @@
             </v-col>
           </v-row>
         </v-card-text>
-        <v-dialog v-model="editEntityForm" max-width="700">
-          <edit-entity-form
+        <v-dialog v-model="entityForm" max-width="700">
+          <entity-form
             :key="formKey"
             :entity="entity"
+            :method="method"
             :cities="cities"
             :rate-types="rateTypes"
             :table-name="filters.tableName"
             @cancel="closeForm()"
-            @success="formSuccess($event)"
+            @successEdit="formSuccessEdit($event)"
+            @successCreate="formSuccessCreate($event)"
           />
         </v-dialog>
       </v-card>
@@ -166,12 +168,12 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import cloneDeep from "lodash/cloneDeep";
-import EditEntityForm from './EditEntityForm'
+import EntityForm from './EntityForm'
 
 export default {
   name: "Entities",
   components: {
-    EditEntityForm
+    EntityForm
   },
   data() {
     return {
@@ -188,8 +190,9 @@ export default {
       entity: null,
       entityKey: null,
       formKey: 1,
-      editEntityForm: false,
+      entityForm: false,
       entityName: 'city',
+      method: '',
       filters: {
         tableName: 'cities'
       },
@@ -491,7 +494,8 @@ export default {
         "fetchOrderStatuses",
         "fetchCategories",
         "fetchRateTypes",
-        "editEntity"
+        "editEntity",
+        "createEntity"
       ]),
       truncate (string, limit) {
         if(string.length > limit){
@@ -512,28 +516,56 @@ export default {
         return new Date(date).toLocaleString([], this.dateSettings);
       },
       toCreate () {
+        this.entity = this.items[0]
+        if (this.entity.createdAt) {
+          delete this.entity.createdAt;
+        }
+        if (this.entity.id) {
+          delete this.entity.id;
+        }
+        if (this.entity.updatedAt) {
+          delete this.entity.updatedAt;
+        }
+        this.entity = Object.keys(this.entity).forEach(function(item){
+          console.log(item)
+          // this.entity[item]= null;
+        });
+        this.method = 'create';
         this.formKey++;
-        this.editEntityForm = true;
+        this.entityForm = true;
       },
       toEdit (item, key) {
+        this.method = 'edit';
         this.entity = item;
         this.entityKey = key;
         this.formKey++;
-        this.editEntityForm = true;
+        this.entityForm = true;
       },
-      formSuccess (item) {
+      formSuccessEdit (item) {
+        console.log(item, this.entityName)
         this.closeForm();
-        const entity = {
-          item: item,
-          entityName: this.entityName
-        }
-        this.editEntity(entity).then(() => {
-          this.items[this.entityKey] = item;
-          this.$toast.success('Успешно отредактировано - ' + this.entityName);
-        });
+        // if (item) {
+        //   const entity = {
+        //     item: item,
+        //     entityName: this.entityName
+        //   }
+        //   this.editEntity(entity).then(() => {
+        //     this.items[this.entityKey] = item;
+        //     this.$toast.success('Успешно отредактировано - ' + this.entityName);
+        //   });
+        // } else {
+        //   this.createEntity(entity).then(() => {
+        //     this.items[this.entityKey] = item;
+        //     this.$toast.success('Успешно отредактировано - ' + this.entityName);
+        //   });
+        // }
+      },
+      formSuccessCreate (item) {
+        console.log(1, item, this.entityName)
+        this.closeForm();
       },
       closeForm () {
-        this.editEntityForm = false;
+        this.entityForm = false;
       }
   }
 };
