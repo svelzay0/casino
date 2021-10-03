@@ -80,11 +80,17 @@
 .entity__create_btn {
   width: auto;
 }
+.order__hrs {
+  display: none;
+}
 
 // desktop(1466px - 2048px)
 @media screen and (max-width: $desktop) {
   .order__actions {
     width: 100px;
+  }
+  .order__actions_text {
+    display: none;
   }
 }
 
@@ -112,6 +118,14 @@
 @media screen and (max-width: $tablet) {
   .order__table_circles {
     display: none;
+  }
+}
+
+// datatable (0px - 600px)
+@media screen and (max-width: $datatable) {
+  .order__hrs {
+    display: block;
+    margin: 0px -16px 0px -300px;
   }
 }
 

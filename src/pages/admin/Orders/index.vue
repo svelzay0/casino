@@ -71,7 +71,6 @@
                 :items="orders"
                 :loading="loading"
                 :items-per-page="itemsPerPage"
-                item-key="key"
                 :page.sync="page"
                 :footer-props="{
                 showFirstLastPage: true,
@@ -227,6 +226,9 @@
                       </v-btn-toggle>
                     </v-col>
                   </v-row>
+                  <div v-for="n in 5" :key="n">
+                    <hr class="order__hrs" />
+                  </div>
                 </template>
               </v-data-table>
             </v-col>

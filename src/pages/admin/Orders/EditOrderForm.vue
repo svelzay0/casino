@@ -8,7 +8,7 @@
       <v-row class="pt-12">
         <v-col cols="4">
           <v-select
-            v-model="orderStatusId"
+            v-model="order.orderStatusId"
             item-value="id"
             item-text="name"
             outlined
@@ -18,7 +18,7 @@
         </v-col>
         <v-col cols="4">
           <v-text-field
-            v-model="price"
+            v-model="order.price"
             :label="'Цена заказа'"
             v-mask="'##########'"
             outlined
@@ -28,7 +28,7 @@
         </v-col>
         <v-col cols="4">
           <v-text-field
-            v-model="color"
+            v-model="order.color"
             :label="'Цвет автомобиля'"
             outlined
             clearable
@@ -39,21 +39,21 @@
           <v-checkbox
             class="pa-0 ma-0"
             x-large
-            v-model="isRightWheel"
+            v-model="order.isRightWheel"
             :label="'Правый руль'"
           />
         </v-col>
         <v-col cols="4">
           <v-checkbox
             class="pa-0 ma-0"
-            v-model="isFullTank"
+            v-model="order.isFullTank"
             :label="'Полный бак'"
           />
         </v-col>
         <v-col cols="4">
           <v-checkbox
             class="pa-0 ma-0"
-            v-model="isNeedChildChair"
+            v-model="order.isNeedChildChair"
             :label="'Детское кресло'"
           />
         </v-col>
@@ -78,7 +78,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'EditOrderForm',
   props: {
@@ -93,21 +92,18 @@ export default {
   },
   data () {
     return {
-      orderStatusId: null,
-      price: null,
-      color: null,
-      isRightWheel: null,
-      isFullTank: null,
-      isNeedChildChair: null
+      order: {
+        orderStatusId: null,
+        price: null,
+        color: null,
+        isRightWheel: null,
+        isFullTank: null,
+        isNeedChildChair: null
+      }
     }
   },
   created () {
-    this.orderStatusId = this.orderItem.orderStatusId;
-    this.price = this.orderItem.price
-    this.color = this.orderItem.color
-    this.isRightWheel = this.orderItem.isRightWheel
-    this.isFullTank = this.orderItem.isFullTank
-    this.isNeedChildChair = this.orderItem.isNeedChildChair
+    this.order = { ...this.orderItem };
   },
   computed: {
     title () {
@@ -121,11 +117,11 @@ export default {
           this.orderItem.orderStatusId = element;
         }
       })
-      this.orderItem.price = this.price
-      this.orderItem.color = this.color
-      this.orderItem.isRightWheel = this.isRightWheel
-      this.orderItem.isFullTank = this.isFullTank
-      this.orderItem.isNeedChildChair = this.isNeedChildChair
+      this.orderItem.price = this.order.price
+      this.orderItem.color = this.order.color
+      this.orderItem.isRightWheel = this.order.isRightWheel
+      this.orderItem.isFullTank = this.order.isFullTank
+      this.orderItem.isNeedChildChair = this.order.isNeedChildChair
       this.$emit('success', this.orderItem);
     }
   }

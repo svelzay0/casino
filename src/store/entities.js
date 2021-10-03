@@ -36,58 +36,58 @@ export default {
     }
   },
   actions: {
-    async fetchCities(context) {
+    async fetchCities({ commit }) {
       try {
         const { data } = await axios(ApiRequest("get", "/city"));
-        context.commit("setCities", data.data);
+        commit("setCities", data.data);
       } catch (e) {
         handleError(e);
       }
     },
-    async fetchPoints(context) {
+    async fetchPoints({ commit }) {
       try {
         const { data } = await axios(ApiRequest("get", "/point"));
-        context.commit("setPoints", data.data);
+        commit("setPoints", data.data);
       } catch (e) {
         handleError(e);
       }
     },
-    async fetchOrders(context) {
+    async fetchOrders({ commit }) {
       try {
         const { data } = await axios(ApiRequest("get", "/order"));
-        context.commit("setOrders", data.data);
+        commit("setOrders", data.data);
       } catch (e) {
         handleError(e);
       }
     },
-    async fetchOrderStatuses(context) {
+    async fetchOrderStatuses({ commit }) {
       try {
         const { data } = await axios(ApiRequest("get", "/orderStatus"));
-        context.commit("setOrderStatuses", data.data);
+        commit("setOrderStatuses", data.data);
       } catch (e) {
         handleError(e);
       }
     },
-    async fetchCategories(context) {
+    async fetchCategories({ commit }) {
       try {
         const { data } = await axios(ApiRequest("get", "/category"));
-        context.commit("setCategories", data.data);
+        commit("setCategories", data.data);
       } catch (e) {
         handleError(e);
       }
     },
-    async fetchRates(context) {
+    async fetchRates({ commit }) {
       try {
         const { data } = await axios(ApiRequest("get", "/rate"));
-        context.commit("setRates", data.data);
+        commit("setRates", data.data);
       } catch (e) {
         handleError(e);
       }
     },
-    async fetchRateTypes(context) {
+    async fetchRateTypes({ commit }) {
       try {
         const { data } = await axios(ApiRequest("get", "/rateType"));
-        context.commit("setRateTypes", data.data);
+        commit("setRateTypes", data.data);
       } catch (e) {
         handleError(e);
       }
