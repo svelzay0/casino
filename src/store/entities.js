@@ -92,49 +92,34 @@ export default {
         handleError(e);
       }
     },
-    async deleteOrder(context, id) {
+    async deleteEntity(context, item) {
       try {
-        await axios(ApiRequest("delete", `/order/${id}`));
-      } catch (e) {
-        handleError(e);
-      }
-    },
-    async editOrder(context, item) {
-      try {
-        await axios(ApiRequest("put", `/order/${item.id}`, item));
+        await axios(ApiRequest("delete", '/' + item.entity + '/' + item.id));
       } catch (e) {
         handleError(e);
       }
     },
     async editEntity(context, item) {
-      const entityItem = item.item
-      const entityName = item.entityName
       try {
-        await axios(ApiRequest("put", '/' + entityName + '/' + entityItem.id, entityItem));
+        await axios(ApiRequest("put", '/' + item.entityName + '/' + item.item.id, item.item));
       } catch (e) {
         handleError(e);
       }
     },
-    async changeStatusOfOrderToCancel(context, id, status) {
+    async createEntity(context, item) {
       try {
-        const data = {
-          orderStatusId: status
-        }
-        await axios(ApiRequest("put", `/order/${id}`, data));
+        await axios(ApiRequest("post", '/' + item.entityName, item.item));
       } catch (e) {
         handleError(e);
       }
     },
-    async changeStatusOfOrderToDone(context, id, status) {
+    async changeStatusOfOrder(context, id, status) {
       try {
-        const data = {
-          orderStatusId: status
-        }
-        await axios(ApiRequest("put", `/order/${id}`, data));
+        await axios(ApiRequest("put", `/order/${id}`, {orderStatusId: status}));
       } catch (e) {
         handleError(e);
       }
-    },
+    }
   },
   getters: {
     getCities(state) {

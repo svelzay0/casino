@@ -248,6 +248,15 @@
             @success="formSuccess($event)"
           />
         </v-dialog>
+        <v-dialog v-model="confirmDeleteForm" max-width="700">
+          <confirm-delete-form
+            :key="formKey"
+            :entity="deleteItem"
+            :table-name="'order'"
+            @cancel="closeForm()"
+            @successDelete="formSuccessDelete($event)"
+          />
+        </v-dialog>
       </v-card>
     </v-col>
   </v-row>
@@ -257,11 +266,13 @@
 import { mapGetters, mapActions } from "vuex";
 import cloneDeep from "lodash/cloneDeep";
 import EditOrderForm from './EditOrderForm'
+import ConfirmDeleteForm from '../../../components/ConfirmDeleteForm'
 
 export default {
   name: "Orders",
   components: {
-    EditOrderForm
+    EditOrderForm,
+    ConfirmDeleteForm
   },
   data() {
     return {
@@ -279,6 +290,8 @@ export default {
       orderKey: null,
       formKey: 1,
       editOrderForm: false,
+      confirmDeleteForm: false,
+      deleteItem: null,
       doneStatus: null,
       cancelStatus: null,
       filters: {
@@ -371,27 +384,37 @@ export default {
       this.fetchCities().then(() => {
         this.cities = this.getCities;
       });
+    } else {
+      this.cities = this.getCities;
     }
     if (this.getOrderStatuses.length === 0) {
       this.fetchOrderStatuses().then(() => {
         this.statuses = this.getOrderStatuses;
       });
+    } else {
+      this.statuses = this.getOrderStatuses;
     }
     if (this.getCategories.length === 0) {
       this.fetchCategories().then(() => {
         this.categories = this.getCategories;
       });
+    } else {
+      this.categories = this.getCategories;
     }
     if (this.getRateTypes.length === 0) {
       this.fetchRateTypes().then(() => {
         this.rateTypes = this.getRateTypes;
       });
+    } else {
+      this.rateTypes = this.getRateTypes;
     }
     if (this.getOrders.length === 0) {
       this.fetchOrders().then(() => {
         this.loading = false;
         this.orders = this.getOrders;
       });
+    } else {
+      this.orders = this.getOrders;
     }
   },
   methods: {
@@ -402,10 +425,9 @@ export default {
         "fetchOrderStatuses",
         "fetchCategories",
         "fetchRateTypes",
-        "deleteOrder",
-        "editOrder",
-        "changeStatusOfOrderToDone",
-        "changeStatusOfOrderToCancel"
+        "deleteEntity",
+        "editEntity",
+        "changeStatusOfOrder"
       ]),
     getImgPath(car) {
       if (typeof(car) != "undefined" && car !== null && car.thumbnail.path.length < 1000) {
@@ -448,7 +470,17 @@ export default {
       this.loading = false;
     },
     toDelete (id) {
-      this.deleteOrder(id).then(() => {
+      this.deleteItem = {
+        id: id,
+        entity: 'order'
+      }
+      this.confirmDeleteForm = true;
+      this.formKey++;
+    },
+    formSuccessDelete (item) {
+      this.closeForm();
+      const id = item.id;
+      this.deleteEntity(item).then(() => {
         this.orders = this.orders.filter(item => item.id !== id);
         this.$toast.info('Удалено');
       });
@@ -461,13 +493,18 @@ export default {
     },
     formSuccess (item) {
       this.closeForm();
-      this.editOrder(item).then(() => {
+      const entity = {
+        item: item,
+        entityName: 'order'
+      }
+      this.editEntity(entity).then(() => {
         this.orders[this.orderKey] = item;
         this.$toast.success('Успешно отредактировано');
       });
     },
     closeForm () {
       this.editOrderForm = false;
+      this.confirmDeleteForm = false;
     },
     toChangeStatusToDone (id, key) {
       this.statuses.forEach((status) => {
@@ -475,10 +512,7 @@ export default {
           this.doneStatus = status;
         }
       })
-      this.changeStatusOfOrderToDone(id, this.doneStatus).then(() => {
-        this.orders[key].orderStatusId = this.doneStatus;
-        this.$toast.success('Статус изменен');
-      });
+      this.changeStatus(id, key, this.doneStatus);
     },
     toChangeStatusToCancel (id, key) {
       this.statuses.forEach((status) => {
@@ -486,8 +520,11 @@ export default {
           this.cancelStatus = status;
         }
       })
-      this.changeStatusOfOrderToCancel(id, this.cancelStatus).then(() => {
-        this.orders[key].orderStatusId = this.cancelStatus;
+      this.changeStatus(id, key, this.cancelStatus);
+    },
+    changeStatus(id, key, status) {
+      this.changeStatusOfOrder(id, status).then(() => {
+        this.orders[key].orderStatusId = status;
         this.$toast.success('Статус изменен');
       });
     },

@@ -147,7 +147,6 @@ export default {
     }
   },
   created () {
-    console.log(this.entity)
     if (this.method === 'edit') {
       if (this.tableName !== 'rates') {
         this.name = this.entity.name

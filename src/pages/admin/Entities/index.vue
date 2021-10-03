@@ -160,6 +160,15 @@
             @successCreate="formSuccessCreate($event)"
           />
         </v-dialog>
+        <v-dialog v-model="confirmDeleteForm" max-width="700">
+          <confirm-delete-form
+            :key="formKey"
+            :entity="deleteItem"
+            :table-name="filters.tableName"
+            @cancel="closeForm()"
+            @successDelete="formSuccessDelete($event)"
+          />
+        </v-dialog>
       </v-card>
     </v-col>
   </v-row>
@@ -169,11 +178,13 @@
 import { mapGetters, mapActions } from "vuex";
 import cloneDeep from "lodash/cloneDeep";
 import EntityForm from './EntityForm'
+import ConfirmDeleteForm from '../../../components/ConfirmDeleteForm'
 
 export default {
   name: "Entities",
   components: {
-    EntityForm
+    EntityForm,
+    ConfirmDeleteForm
   },
   data() {
     return {
@@ -189,8 +200,10 @@ export default {
       itemHeaders: [],
       entity: null,
       entityKey: null,
+      deleteItem: null,
       formKey: 1,
       entityForm: false,
+      confirmDeleteForm: false,
       entityName: 'city',
       method: '',
       filters: {
@@ -451,39 +464,63 @@ export default {
   },
   mounted() {
     if (this.getCities.length === 0) {
+      this.loading = true;
       this.fetchCities().then(() => {
         this.cities = this.getCities;
         this.items = cloneDeep(this.cities);
         this.itemHeaders = cloneDeep(this.cityHeaders);
         this.loading = false;
       });
+    } else {
+      this.cities = this.getCities;
+      this.items = cloneDeep(this.getCities);
+      this.itemHeaders = cloneDeep(this.cityHeaders);
     }
     if (this.getPoints.length === 0) {
+      this.loading = true;
       this.fetchPoints().then(() => {
         this.points = this.getPoints;
+        this.loading = false;
       });
+    } else {
+      this.points = this.getPoints;
     }
     if (this.getRates.length === 0) {
+      this.loading = true;
       this.fetchRates().then(() => {
         this.rates = this.getRates;
+        this.loading = false;
       });
+    } else {
+      this.rates = this.getRates;
     }
     if (this.getOrderStatuses.length === 0) {
+      this.loading = true;
       this.fetchOrderStatuses().then(() => {
         this.statuses = this.getOrderStatuses;
+        this.loading = false;
       });
+    } else {
+      this.cities = this.getCities;
     }
     if (this.getCategories.length === 0) {
       this.fetchCategories().then(() => {
+        this.loading = true;
         this.categories = this.getCategories;
+        this.loading = false;
       });
+    } else {
+      this.categories = this.getCategories;
     }
     if (this.getRateTypes.length === 0) {
+      this.loading = true;
       this.fetchRateTypes().then(() => {
         this.rateTypes = this.getRateTypes;
+        this.loading = false;
       });
+    } else {
+      this.rateTypes = this.getRateTypes;
     }
-    this.loading = false;
   },
   methods: {
     ...mapActions("entities",
@@ -495,78 +532,145 @@ export default {
         "fetchCategories",
         "fetchRateTypes",
         "editEntity",
-        "createEntity"
+        "createEntity",
+        "deleteEntity"
       ]),
-      truncate (string, limit) {
-        if(string.length > limit){
-          return string.substring(0,limit)+"...";
-        }
-        else {
-          return string;
-        }
-      },
-      toDelete (id) {
-        console.log(id)
-        // this.deleteOrder(id).then(() => {
-        //   this.orders = this.orders.filter(item => item.id !== id);
-        //   this.$toast.info('Удалено');
-        // });
-      },
-      formatDate (date) {
-        return new Date(date).toLocaleString([], this.dateSettings);
-      },
-      toCreate () {
-        this.entity = this.items[0]
-        if (this.entity.createdAt) {
-          delete this.entity.createdAt;
-        }
-        if (this.entity.id) {
-          delete this.entity.id;
-        }
-        if (this.entity.updatedAt) {
-          delete this.entity.updatedAt;
-        }
-        this.entity = Object.keys(this.entity).forEach(function(item){
-          console.log(item)
-          // this.entity[item]= null;
-        });
-        this.method = 'create';
-        this.formKey++;
-        this.entityForm = true;
-      },
-      toEdit (item, key) {
-        this.method = 'edit';
-        this.entity = item;
-        this.entityKey = key;
-        this.formKey++;
-        this.entityForm = true;
-      },
-      formSuccessEdit (item) {
-        console.log(item, this.entityName)
-        this.closeForm();
-        // if (item) {
-        //   const entity = {
-        //     item: item,
-        //     entityName: this.entityName
-        //   }
-        //   this.editEntity(entity).then(() => {
-        //     this.items[this.entityKey] = item;
-        //     this.$toast.success('Успешно отредактировано - ' + this.entityName);
-        //   });
-        // } else {
-        //   this.createEntity(entity).then(() => {
-        //     this.items[this.entityKey] = item;
-        //     this.$toast.success('Успешно отредактировано - ' + this.entityName);
-        //   });
-        // }
-      },
-      formSuccessCreate (item) {
-        console.log(1, item, this.entityName)
-        this.closeForm();
-      },
-      closeForm () {
-        this.entityForm = false;
+    truncate (string, limit) {
+      if(string.length > limit){
+        return string.substring(0,limit)+"...";
       }
+      else {
+        return string;
+      }
+    },
+    toDelete (id) {
+      this.deleteItem = {
+        id: id,
+        entity: this.entityName
+      }
+      this.confirmDeleteForm = true;
+      this.formKey++;
+    },
+    formSuccessDelete (item) {
+      this.closeForm();
+      this.deleteEntity(item).then(() => {
+        this.fetchNewRows();
+        this.$toast.info('Удалено');
+      });
+    },
+    formatDate (date) {
+      return new Date(date).toLocaleString([], this.dateSettings);
+    },
+    toCreate () {
+      this.entity = this.items[0]
+      if (this.entity.createdAt) {
+        delete this.entity.createdAt;
+      }
+      if (this.entity.id) {
+        delete this.entity.id;
+      }
+      if (this.entity.updatedAt) {
+        delete this.entity.updatedAt;
+      }
+      var clearObjectValues = (objToClear) => {
+        Object.keys(objToClear).forEach((param) => {
+            if ( (objToClear[param]).toString() === "[object Object]" ) {
+                clearObjectValues(objToClear[param]);
+            } else {
+                objToClear[param] = null;
+            }
+        })
+        return objToClear;
+      };
+      this.entity = clearObjectValues(this.entity);
+      this.method = 'create';
+      this.formKey++;
+      this.entityForm = true;
+    },
+    toEdit (item, key) {
+      this.method = 'edit';
+      this.entity = item;
+      this.entityKey = key;
+      this.formKey++;
+      this.entityForm = true;
+    },
+    formSuccessEdit (item) {  
+      this.closeForm();
+      const entity = {
+        item: item,
+        entityName: this.entityName
+      }
+      this.editEntity(entity).then(() => {
+        this.items[this.entityKey] = item;
+        this.$toast.success('Успешно отредактировано - ' + this.entityName);
+      });
+    },
+    formSuccessCreate (item) {
+      this.closeForm();
+      const entity = {
+        item: item,
+        entityName: this.entityName
+      }
+      this.createEntity(entity).then(() => {
+        this.loading = true;
+        this.fetchNewRows();
+        this.$toast.success('Успешно создано - ' + this.entityName);
+      });
+    },
+    closeForm () {
+      this.entityForm = false;
+      this.confirmDeleteForm = false;
+    },
+    fetchNewRows() {
+      if (this.entityName === 'city') {
+        this.fetchCities().then(() => {
+          this.cities = this.getCities;
+          this.items = cloneDeep(this.cities);
+          this.itemHeaders = cloneDeep(this.cityHeaders);
+          this.loading = false;
+        });
+      }
+      if (this.entityName === 'point') {
+        this.loading = true;
+        this.fetchPoints().then(() => {
+          this.points = this.getPoints;
+          this.items = cloneDeep(this.points);
+          this.loading = false;
+        });
+      }
+      if (this.entityName === 'rate') {
+        this.loading = true;
+        this.fetchRates().then(() => {
+          this.rates = this.getRates;
+          this.items = cloneDeep(this.rates);
+          this.loading = false;
+        });
+      }
+      if (this.entityName === 'orderStatus') {
+        this.loading = true;
+        this.fetchOrderStatuses().then(() => {
+          this.statuses = this.getOrderStatuses;
+          this.items = cloneDeep(this.statuses);
+          this.loading = false;
+        });
+      }
+      if (this.entityName === 'category') {
+        this.fetchCategories().then(() => {
+          this.loading = true;
+          this.categories = this.getCategories;
+          this.items = cloneDeep(this.categories);
+          this.loading = false;
+        });
+      }
+      if (this.entityName === 'rateType') {
+        this.loading = true;
+        this.fetchRateTypes().then(() => {
+          this.rateTypes = this.getRateTypes;
+          this.items = cloneDeep(this.rateTypes);
+          this.loading = false;
+        });
+      }
+    }       
   }
 };
 </script>
