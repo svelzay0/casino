@@ -84,7 +84,7 @@ export default {
         },
         {
           title: 'Сущности',
-          to: { name: 'List' },
+          to: { name: 'Entities' },
           ico: 'mdi-clipboard-list'
         },
         {
