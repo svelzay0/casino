@@ -13,7 +13,7 @@
       >
         Отмена
       </v-btn>
-      <v-btn 
+      <v-btn
         color="primary"
         @click="submit"
       >

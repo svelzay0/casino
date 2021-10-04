@@ -79,10 +79,10 @@
                 }"
                 loading-text="Загрузка сущностей, пожалуйста подождите..."
               >
-                <template #[`item.id`]="{ item }">  
+                <template #[`item.id`]="{ item }">
                   {{ item.id ? (truncate(item.id, 5)) : '-' }}
                 </template>
-                <template #[`item.createdAt`]="{ item }">  
+                <template #[`item.createdAt`]="{ item }">
                   {{ item.createdAt ? formatDate(item.createdAt) : '-' }}
                 </template>
                 <template #[`item.updatedAt`]="{ item }">
@@ -142,6 +142,9 @@
                       </v-btn-toggle>
                     </v-col>
                   </v-row>
+                  <div v-for="n in 5" :key="n">
+                    <hr class="order__hrs" />
+                  </div>
                 </template>
               </v-data-table>
             </v-col>
@@ -594,14 +597,14 @@ export default {
       this.formKey++;
       this.entityForm = true;
     },
-    formSuccessEdit (item) {  
+    formSuccessEdit (item) {
       this.closeForm();
       const entity = {
         item: item,
         entityName: this.entityName
       }
       this.editEntity(entity).then(() => {
-        this.items[this.entityKey] = item;
+        this.fetchNewRows();
         this.$toast.success('Успешно отредактировано - ' + this.entityName);
       });
     },
@@ -670,7 +673,7 @@ export default {
           this.loading = false;
         });
       }
-    }       
+    }
   }
 };
 </script>

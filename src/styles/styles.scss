@@ -116,9 +116,7 @@
 
 // tablet (768px - 1023px)
 @media screen and (max-width: $tablet) {
-  .order__table_circles {
-    display: none;
-  }
+  // future styles
 }
 
 // datatable (0px - 600px)
@@ -140,9 +138,6 @@
   .footer_left_text_v2 {
     display: none;
   }
-  .order__table_circles {
-    display: none;
-  }
   .order__addition_info {
     display: none;
   }
@@ -154,9 +149,6 @@
 // kettle (0px - 320px)
 @media screen and (max-width: $kettle) {
   .avatar {
-    display: none;
-  }
-  .order__table_circles {
     display: none;
   }
   .order__addition_info {

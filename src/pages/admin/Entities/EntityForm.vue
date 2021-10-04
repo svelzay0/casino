@@ -8,7 +8,7 @@
       <v-row class="pt-12">
         <v-col cols="12" v-if="tableName !== 'rates'">
           <v-text-field
-            v-model="name"
+            v-model="entityItem.name"
             :label="'Наименование'"
             outlined
             required
@@ -17,7 +17,7 @@
         </v-col>
         <v-col cols="12" v-if="tableName === 'points'">
           <v-text-field
-            v-model="address"
+            v-model="entityItem.address"
             :label="'Адрес'"
             outlined
             required
@@ -26,7 +26,7 @@
         </v-col>
         <v-col cols="12" v-if="tableName === 'points'">
           <v-select
-            v-model="city"
+            v-model="entityItem.cityId"
             item-value="id"
             item-text="name"
             outlined
@@ -36,7 +36,7 @@
         </v-col>
         <v-col cols="12" v-if="tableName === 'rates'">
           <v-text-field
-            v-model="price"
+            v-model="entityItem.price"
             :label="'Стоимость'"
             v-mask="'##########'"
             outlined
@@ -46,7 +46,7 @@
         </v-col>
         <v-col cols="12" v-if="tableName === 'rates'">
           <v-select
-            v-model="rateType"
+            v-model="entityItem.rateTypeId"
             item-value="id"
             item-text="name"
             outlined
@@ -56,7 +56,7 @@
         </v-col>
         <v-col cols="12" v-if="tableName === 'categories'">
           <v-text-field
-            v-model="description"
+            v-model="entityItem.description"
             :label="'Описание'"
             outlined
             required
@@ -65,7 +65,7 @@
         </v-col>
         <v-col cols="12" v-if="tableName === 'rateTypes'">
           <v-text-field
-            v-model="unit"
+            v-model="entityItem.unit"
             :label="'Единица измерения'"
             outlined
             required
@@ -82,18 +82,18 @@
       >
         Отмена
       </v-btn>
-      <v-btn 
+      <v-btn
         v-if="tableName !== 'rates'"
         color="primary"
-        :disabled="name.length < 3"
+        :disabled="entityItem.name.length < 3"
         @click="submit"
       >
         Сохранить
       </v-btn>
-      <v-btn 
+      <v-btn
         v-if="tableName === 'rates'"
         color="primary"
-        :disabled="price < 1"
+        :disabled="entityItem.price < 1"
         @click="submit"
       >
         Сохранить
@@ -136,34 +136,20 @@ export default {
       priceRules: [
         v => v > 0 || 'Стоимость должна быть больше нуля'
       ],
-      name: '',
-      address: '',
-      price: 0,
-      unit: '',
-      city: null,
-      rateType: null,
-      description: '',
-      creatingEntity: {}
+      entityItem: {
+        name: '',
+        address: '',
+        price: 0,
+        unit: '',
+        city: null,
+        rateType: null,
+        description: ''
+      }
     }
   },
   created () {
     if (this.method === 'edit') {
-      if (this.tableName !== 'rates') {
-        this.name = this.entity.name
-      } else if (this.tableName === 'rates') {
-        this.price = this.entity.price
-        this.rateType = this.entity.rateTypeId
-      }
-      if (this.tableName === 'points') {
-        this.address = this.entity.address
-        this.city = this.entity.cityId
-      }
-      if (this.tableName === 'categories') {
-        this.description = this.entity.description
-      }
-      if (this.tableName === 'rateTypes') {
-        this.unit = this.entity.unit
-      }
+      this.entityItem = { ...this.entity };
     }
   },
   computed: {
@@ -178,28 +164,28 @@ export default {
   methods: {
     submit () {
       if (this.tableName !== 'rates') {
-        this.entity.name = this.name
+        this.entity.name = this.entityItem.name
       } else if (this.tableName === 'rates') {
-        this.entity.price = this.price
+        this.entity.price = this.entityItem.price
         this.rateTypes.forEach((el) => {
-          if (el.id === this.rateType) {
+          if (el.id === this.entityItem.rateTypeId) {
             this.entity.rateTypeId = el
           }
         })
-      }  
+      }
       if (this.tableName === 'points') {
-        this.entity.address = this.address
+        this.entity.address = this.entityItem.address
         this.cities.forEach((el) => {
-          if (el.id === this.city) {
+          if (el.id === this.entityItem.cityId) {
             this.entity.cityId = el
           }
         })
       }
       if (this.tableName === 'categories') {
-        this.entity.description = this.description
+        this.entity.description = this.entityItem.description
       }
       if (this.tableName === 'rateTypes') {
-        this.entity.unit = this.unit
+        this.entity.unit = this.entityItem.unit
       }
       if (this.method === 'edit') {
         this.$emit('successEdit', this.entity, this.tableName);
