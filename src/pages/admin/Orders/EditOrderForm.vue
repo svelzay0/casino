@@ -13,13 +13,13 @@
             item-text="name"
             outlined
             :items="statuses"
-            :label="'Статус заказа'"
+            label='Статус заказа'
           />
         </v-col>
         <v-col cols="4">
           <v-text-field
             v-model="order.price"
-            :label="'Цена заказа'"
+            label='Цена заказа'
             v-mask="'##########'"
             outlined
             clearable
@@ -29,7 +29,7 @@
         <v-col cols="4">
           <v-text-field
             v-model="order.color"
-            :label="'Цвет автомобиля'"
+            label='Цвет автомобиля'
             outlined
             clearable
             required
@@ -40,21 +40,21 @@
             class="pa-0 ma-0"
             x-large
             v-model="order.isRightWheel"
-            :label="'Правый руль'"
+            label='Правый руль'
           />
         </v-col>
         <v-col cols="4">
           <v-checkbox
             class="pa-0 ma-0"
             v-model="order.isFullTank"
-            :label="'Полный бак'"
+            label='Полный бак'
           />
         </v-col>
         <v-col cols="4">
           <v-checkbox
             class="pa-0 ma-0"
             v-model="order.isNeedChildChair"
-            :label="'Детское кресло'"
+            label='Детское кресло'
           />
         </v-col>
       </v-row>
@@ -107,13 +107,13 @@ export default {
   },
   computed: {
     title () {
-      return 'Редактировать заказ ' + this.orderItem.id;
+      return `Редактировать заказ ${this.orderItem.id}`;
     }
   },
   methods: {
     submit () {
       this.statuses.forEach((element) => {
-        if (element.id === this.orderStatusId) {
+        if (element.id === this.order.orderStatusId) {
           this.orderItem.orderStatusId = element;
         }
       })

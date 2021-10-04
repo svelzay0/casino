@@ -9,7 +9,7 @@
         <v-col cols="12" v-if="tableName !== 'rates'">
           <v-text-field
             v-model="entityItem.name"
-            :label="'Наименование'"
+            label='Наименование'
             outlined
             required
             :rules="nameRules"
@@ -18,7 +18,7 @@
         <v-col cols="12" v-if="tableName === 'points'">
           <v-text-field
             v-model="entityItem.address"
-            :label="'Адрес'"
+            label='Адрес'
             outlined
             required
             :rules="nameRules"
@@ -31,13 +31,13 @@
             item-text="name"
             outlined
             :items="cities"
-            :label="'Город'"
+            label='Город'
           />
         </v-col>
         <v-col cols="12" v-if="tableName === 'rates'">
           <v-text-field
             v-model="entityItem.price"
-            :label="'Стоимость'"
+            label='Стоимость'
             v-mask="'##########'"
             outlined
             required
@@ -51,13 +51,13 @@
             item-text="name"
             outlined
             :items="rateTypes"
-            :label="'Тариф'"
+            label='Тариф'
           />
         </v-col>
         <v-col cols="12" v-if="tableName === 'categories'">
           <v-text-field
             v-model="entityItem.description"
-            :label="'Описание'"
+            label='Описание'
             outlined
             required
             :rules="nameRules"
@@ -66,7 +66,7 @@
         <v-col cols="12" v-if="tableName === 'rateTypes'">
           <v-text-field
             v-model="entityItem.unit"
-            :label="'Единица измерения'"
+            label='Единица измерения'
             outlined
             required
             :rules="nameRules"
@@ -155,9 +155,9 @@ export default {
   computed: {
     title () {
       if (this.method === 'edit') {
-        return 'Редактировать сущность из таблицы ' + this.tableName;
+        return `Редактировать сущность из таблицы ${this.tableName}`;
       } else {
-        return 'Создать сущность в таблице ' + this.tableName;
+        return `Создать сущность в таблице ${this.tableName}`;
       }
     }
   },

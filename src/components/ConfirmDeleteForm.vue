@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     title () {
-      return 'Удалить сущность из таблицы ' + this.entity.entity + "?";
+      return `Удалить сущность из таблицы ${this.entity.entity}?`;
     }
   },
   methods: {

@@ -52,9 +52,9 @@ export default {
         handleError(e);
       }
     },
-    async fetchOrders({ commit }) {
+    async fetchOrders({ commit }, item) {
       try {
-        const { data } = await axios(ApiRequest("get", "/order"));
+        const { data } = await axios(ApiRequest("get", `/order?offset=${item.offset}&limit=${item.limit}`));
         commit("setOrders", data.data);
       } catch (e) {
         handleError(e);
@@ -94,28 +94,28 @@ export default {
     },
     async deleteEntity(context, item) {
       try {
-        await axios(ApiRequest("delete", '/' + item.entity + '/' + item.id));
+        await axios(ApiRequest("delete", `/${item.entity}/${item.id}`));
       } catch (e) {
         handleError(e);
       }
     },
     async editEntity(context, item) {
       try {
-        await axios(ApiRequest("put", '/' + item.entityName + '/' + item.item.id, item.item));
+        await axios(ApiRequest("put", `/${item.entityName}/${item.item.id}`, item.item));
       } catch (e) {
         handleError(e);
       }
     },
     async createEntity(context, item) {
       try {
-        await axios(ApiRequest("post", '/' + item.entityName, item.item));
+        await axios(ApiRequest("post", `/${item.entityName}`, item.item));
       } catch (e) {
         handleError(e);
       }
     },
-    async changeStatusOfOrder(context, id, status) {
+    async changeStatusOfOrder(context, item) {
       try {
-        await axios(ApiRequest("put", `/order/${id}`, {orderStatusId: status}));
+        await axios(ApiRequest("put", `/order/${item.id}`, {orderStatusId: item.status}));
       } catch (e) {
         handleError(e);
       }

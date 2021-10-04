@@ -70,19 +70,13 @@
                 :headers="orderHeaders"
                 :items="orders"
                 :loading="loading"
-                :items-per-page="itemsPerPage"
-                :page.sync="page"
+                :items-per-page="5"
                 :footer-props="{
-                showFirstLastPage: true,
-                firstIcon: 'mdi-arrow-collapse-left',
-                lastIcon: 'mdi-arrow-collapse-right',
-                prevIcon: 'mdi-minus',
-                nextIcon: 'mdi-plus',
-                  'items-per-page-text':'Заказов на странице:',
-                  'pageText': '{0}-{1} из {2}'
+                  'items-per-page-options': [5, 10, 20, 50, 100],
+                  'items-per-page-text':'Заказов на странице:'
                 }"
                 loading-text="Загрузка заказов, пожалуйста подождите..."
-                @page-count="pageCount = $event"
+                @update:items-per-page="getItemPerPage"
               >
                 <template #[`item.info`]="{ item }">
                   <v-row>
@@ -161,7 +155,7 @@
                               outlined
                               color="black"
                               v-on="on"
-                              @click="toChangeStatusToDone(item.id, orders.map(function(x) {return x.id; }).indexOf(item.id))"
+                              @click="toChangeStatusToDone(item.id)"
                             >
                               <v-icon color="green darken-2">mdi-check-bold</v-icon>
                               <span class="order__actions_text">Готово</span>
@@ -179,7 +173,7 @@
                               outlined
                               color="black"
                               v-on="on"
-                              @click="toChangeStatusToCancel(item.id, orders.map(function(x) {return x.id; }).indexOf(item.id))"
+                              @click="toChangeStatusToCancel(item.id)"
                             >
                               <v-icon color="red">mdi-close</v-icon>
                               <span class="order__actions_text">Отменить</span>
@@ -226,9 +220,7 @@
                       </v-btn-toggle>
                     </v-col>
                   </v-row>
-                  <div v-for="n in 5" :key="n">
-                    <hr class="order__hrs" />
-                  </div>
+                  <div class="order__hrs" />
                 </template>
               </v-data-table>
             </v-col>
@@ -281,8 +273,11 @@ export default {
       imgDefPath: require("@/assets/default_car.jpg"),
       loading: true,
       page: 1,
-      itemsPerPage: 5,
-      pageCount: 0,
+      pageCount: 820,
+      request: {
+        limit: 5,
+        offset: 4100
+      },
       orders: [],
       cities: [],
       statuses: [],
@@ -291,6 +286,7 @@ export default {
       orderItem: null,
       orderKey: null,
       formKey: 1,
+      itemsPerPage: 5,
       editOrderForm: false,
       confirmDeleteForm: false,
       deleteItem: null,
@@ -371,6 +367,19 @@ export default {
       ])
   },
   watch: {
+    'itemsPerPage': function (newVal) {
+      this.request.limit = newVal;
+      this.pageCount = 4100 / newVal;
+    },
+    'page': function (newVal) {
+      this.request.offset = newVal * this.request.limit;
+      this.loading = true;
+      this.fetchOrders(this.request).then(() => {
+        this.loading = false;
+        this.resetFilters();
+        this.orders = this.getOrders;
+      });
+    },
     filters: {
       handler (newVal) {
         if (!this.reset) {
@@ -411,7 +420,7 @@ export default {
       this.rateTypes = this.getRateTypes;
     }
     if (this.getOrders.length === 0) {
-      this.fetchOrders().then(() => {
+      this.fetchOrders(this.request).then(() => {
         this.loading = false;
         this.orders = this.getOrders;
       });
@@ -500,7 +509,12 @@ export default {
         entityName: 'order'
       }
       this.editEntity(entity).then(() => {
-        this.orders[this.orderKey] = item;
+        this.loading = true;
+        this.fetchOrders(this.request).then(() => {
+          this.loading = false;
+          this.resetFilters();
+          this.orders = this.getOrders;
+        });
         this.$toast.success('Успешно отредактировано');
       });
     },
@@ -508,25 +522,34 @@ export default {
       this.editOrderForm = false;
       this.confirmDeleteForm = false;
     },
-    toChangeStatusToDone (id, key) {
+    toChangeStatusToDone (id) {
       this.statuses.forEach((status) => {
         if (status.name === "Подтвержденные") {
           this.doneStatus = status;
         }
       })
-      this.changeStatus(id, key, this.doneStatus);
+      this.changeStatus(id, this.doneStatus);
     },
-    toChangeStatusToCancel (id, key) {
+    toChangeStatusToCancel (id) {
       this.statuses.forEach((status) => {
         if (status.name === "Отмененые") {
           this.cancelStatus = status;
         }
       })
-      this.changeStatus(id, key, this.cancelStatus);
+      this.changeStatus(id, this.cancelStatus);
     },
-    changeStatus(id, key, status) {
-      this.changeStatusOfOrder(id, status).then(() => {
-        this.orders[key].orderStatusId = status;
+    changeStatus(id, status) {
+      const item = {
+        id: id,
+        status: status
+      }
+      this.changeStatusOfOrder(item).then(() => {
+        this.loading = true;
+        this.fetchOrders(this.request).then(() => {
+          this.loading = false;
+          this.resetFilters();
+          this.orders = this.getOrders;
+        });
         this.$toast.success('Статус изменен');
       });
     },
@@ -537,6 +560,9 @@ export default {
       else {
         return string;
       }
+    },
+    getItemPerPage(val) {
+      this.itemsPerPage = val;
     }
   }
 };

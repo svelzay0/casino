@@ -142,9 +142,7 @@
                       </v-btn-toggle>
                     </v-col>
                   </v-row>
-                  <div v-for="n in 5" :key="n">
-                    <hr class="order__hrs" />
-                  </div>
+                  <div class="order__hrs" />
                 </template>
               </v-data-table>
             </v-col>
