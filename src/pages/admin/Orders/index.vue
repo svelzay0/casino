@@ -276,7 +276,7 @@ export default {
       pageCount: 820,
       request: {
         limit: 5,
-        offset: 4100
+        offset: 0
       },
       orders: [],
       cities: [],
@@ -374,12 +374,7 @@ export default {
     },
     'page': function (newVal) {
       this.request.offset = newVal * this.request.limit;
-      this.loading = true;
-      this.fetchOrders(this.request).then(() => {
-        this.loading = false;
-        this.resetFilters();
-        this.orders = this.getOrders;
-      });
+      this.fetchNewRows();
     },
     filters: {
       handler (newVal) {
@@ -489,11 +484,18 @@ export default {
       this.confirmDeleteForm = true;
       this.formKey++;
     },
+    fetchNewRows () {
+      this.loading = true;
+      this.fetchOrders(this.request).then(() => {
+        this.loading = false;
+        this.resetFilters();
+        this.orders = this.getOrders;
+      });
+    },
     formSuccessDelete (item) {
       this.closeForm();
-      const id = item.id;
       this.deleteEntity(item).then(() => {
-        this.orders = this.orders.filter(item => item.id !== id);
+        this.fetchNewRows();
         this.$toast.info('Удалено');
       });
     },
@@ -510,12 +512,7 @@ export default {
         entityName: 'order'
       }
       this.editEntity(entity).then(() => {
-        this.loading = true;
-        this.fetchOrders(this.request).then(() => {
-          this.loading = false;
-          this.resetFilters();
-          this.orders = this.getOrders;
-        });
+        this.fetchNewRows();
         this.$toast.success('Успешно отредактировано');
       });
     },
@@ -545,12 +542,7 @@ export default {
         status: status
       }
       this.changeStatusOfOrder(item).then(() => {
-        this.loading = true;
-        this.fetchOrders(this.request).then(() => {
-          this.loading = false;
-          this.resetFilters();
-          this.orders = this.getOrders;
-        });
+        this.fetchNewRows();
         this.$toast.success('Статус изменен');
       });
     },
