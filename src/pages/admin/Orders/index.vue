@@ -370,6 +370,7 @@ export default {
     'itemsPerPage': function (newVal) {
       this.request.limit = newVal;
       this.pageCount = 4100 / newVal;
+      this.page = 1;
     },
     'page': function (newVal) {
       this.request.offset = newVal * this.request.limit;
