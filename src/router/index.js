@@ -24,10 +24,10 @@ const routes = [
         component: () => import("../pages/admin/Home"),
       },
       {
-        path: "car",
-        name: "CarCard",
+        path: "cars",
+        name: "Cars",
         beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/CarCard"),
+        component: () => import("../pages/admin/Cars/index.vue"),
       },
       {
         path: "entities",

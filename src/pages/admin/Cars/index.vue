@@ -3,79 +3,18 @@
     <v-col class="pl-10 pr-10">
       <v-card>
         <v-card-text>
-          <v-row>
-            <v-col cols="auto">
-              <v-select
-                v-model="filters.city"
-                item-value="id"
-                item-text="name"
-                dense
-                outlined
-                :disabled="loading"
-                :items="cities"
-                :label="'Город'"
-              />
-            </v-col>
-            <v-col cols="auto">
-              <v-select
-                v-model="filters.status"
-                item-value="id"
-                item-text="name"
-                dense
-                outlined
-                :disabled="loading"
-                :items="statuses"
-                :label="'Статус'"
-              />
-            </v-col>
-            <v-col cols="auto">
-              <v-select
-                v-model="filters.category"
-                item-value="id"
-                item-text="name"
-                dense
-                outlined
-                :disabled="loading"
-                :items="categories"
-                :label="'Категория'"
-              />
-            </v-col>
-            <v-col cols="auto">
-              <v-select
-                v-model="filters.rateType"
-                item-value="id"
-                item-text="name"
-                dense
-                outlined
-                :disabled="loading"
-                :items="rateTypes"
-                :label="'Тариф'"
-              />
-            </v-col>
-            <v-spacer />
-            <v-col cols="auto">
-              <v-btn
-                :disabled="loading"
-                @click="resetFilters()"
-              >
-                Сброс
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-card-text>
-        <v-card-text>
           <v-row align="center" justify="center">
             <v-col cols="12">
               <v-data-table
                 :headers="orderHeaders"
-                :items="orders"
+                :items="cars"
                 :loading="loading"
                 :items-per-page="5"
                 :footer-props="{
                   'items-per-page-options': [5, 10, 20, 50, 100],
-                  'items-per-page-text':'Заказов на странице:'
+                  'items-per-page-text':'Машин на странице:'
                 }"
-                loading-text="Загрузка заказов, пожалуйста подождите..."
+                loading-text="Загрузка машин, пожалуйста подождите..."
                 @update:items-per-page="getItemPerPage"
               >
                 <template #[`item.info`]="{ item }">
@@ -155,42 +94,6 @@
                               outlined
                               color="black"
                               v-on="on"
-                              @click="toChangeStatusToDone(item.id)"
-                            >
-                              <v-icon color="green darken-2">mdi-check-bold</v-icon>
-                              <span class="order__actions_text">Готово</span>
-                            </v-btn>
-                          </template>
-                          <span>{{ 'Готово' }}</span>
-                        </v-tooltip>
-                        <v-tooltip
-                          bottom
-                        >
-                          <template #activator="{ on, attrs }">
-                            <v-btn
-                              class="order__actions"
-                              v-bind="attrs"
-                              outlined
-                              color="black"
-                              v-on="on"
-                              @click="toChangeStatusToCancel(item.id)"
-                            >
-                              <v-icon color="red">mdi-close</v-icon>
-                              <span class="order__actions_text">Отменить</span>
-                            </v-btn>
-                          </template>
-                          <span>{{ 'Отменить' }}</span>
-                        </v-tooltip>
-                        <v-tooltip
-                          bottom
-                        >
-                          <template #activator="{ on, attrs }">
-                            <v-btn
-                              class="order__actions"
-                              v-bind="attrs"
-                              outlined
-                              color="black"
-                              v-on="on"
                               @click="toDelete(item.id)"
                             >
                               <v-icon color="red">mdi-delete</v-icon>
@@ -209,7 +112,7 @@
                               outlined
                               color="black"
                               v-on="on"
-                              @click="toEdit(item, orders.map(function(x) {return x.id; }).indexOf(item.id))"
+                              @click="toEdit(item)"
                             >
                               <v-icon color="primary">mdi-pencil</v-icon>
                               <span class="order__actions_text">Изменить</span>
@@ -233,7 +136,7 @@
             </v-col>
           </v-row>
         </v-card-text>
-        <v-dialog v-model="editOrderForm" max-width="700">
+        <!-- <v-dialog v-model="editOrderForm" max-width="700">
           <edit-order-form
             :key="formKey"
             :order-item="orderItem"
@@ -250,7 +153,7 @@
             @cancel="closeForm()"
             @successDelete="formSuccessDelete($event)"
           />
-        </v-dialog>
+        </v-dialog> -->
       </v-card>
     </v-col>
   </v-row>
@@ -258,52 +161,32 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import cloneDeep from "lodash/cloneDeep";
-import EditOrderForm from './EditOrderForm'
-import ConfirmDeleteForm from '../../../components/ConfirmDeleteForm'
+// import EditOrderForm from './EditOrderForm'
+// import ConfirmDeleteForm from '../../../components/ConfirmDeleteForm'
 
 export default {
-  name: "Orders",
+  name: "Cars",
   components: {
-    EditOrderForm,
-    ConfirmDeleteForm
+    // EditOrderForm,
+    // ConfirmDeleteForm
   },
   data() {
     return {
       imgDefPath: require("@/assets/default_car.jpg"),
       loading: true,
       page: 1,
-      pageCount: 820,
+      pageCount: 14,
       request: {
         limit: 5,
         offset: 0
       },
-      orders: [],
-      cities: [],
-      statuses: [],
-      rateTypes: [],
+      cars: [],
       categories: [],
-      orderItem: null,
-      orderKey: null,
       formKey: 1,
       itemsPerPage: 5,
       editOrderForm: false,
       confirmDeleteForm: false,
       deleteItem: null,
-      doneStatus: null,
-      cancelStatus: null,
-      filters: {
-        city: null,
-        status: null,
-        category: null,
-        rateType: null
-      },
-      defaultFilters: {
-        city: null,
-        status: null,
-        category: null,
-        rateType: null
-      },
       dateSettings: {
         year: 'numeric',
         month: 'numeric',
@@ -331,20 +214,20 @@ export default {
         },
         {
           value: "car",
-          text: "Статус",
-          searchable: false,
-          sortable: false,
-          width: "18%"
-        },
-        {
-          value: "additionals",
-          text: "Особенности",
+          text: "Дополнительно",
           searchable: false,
           sortable: false,
           width: "18%"
         },
         {
           value: "price",
+          text: "Цены",
+          searchable: false,
+          sortable: false,
+          width: "18%"
+        },
+        {
+          value: "timestamp",
           text: "Сорт. цены",
           width: "18%"
         },
@@ -359,11 +242,8 @@ export default {
     },
     ...mapGetters("entities",
       [
-        "getCities",
-        "getOrders",
-        "getOrderStatuses",
-        "getCategories",
-        "getRateTypes"
+        "getCars",
+        "getCategories"
       ])
   },
   watch: {
@@ -374,33 +254,14 @@ export default {
     },
     'page': function (newVal) {
       this.request.offset = newVal * this.request.limit;
-      this.fetchNewRows();
-    },
-    filters: {
-      handler (newVal) {
-        if (!this.reset) {
-          this.setFilters(newVal);
-        }
-        this.reset = false;
-      },
-      deep: true
+      this.loading = true;
+      this.fetchCars(this.request).then(() => {
+        this.loading = false;
+        this.cars = this.getCars;
+      });
     }
   },
   mounted() {
-    if (this.getCities.length === 0) {
-      this.fetchCities().then(() => {
-        this.cities = this.getCities;
-      });
-    } else {
-      this.cities = this.getCities;
-    }
-    if (this.getOrderStatuses.length === 0) {
-      this.fetchOrderStatuses().then(() => {
-        this.statuses = this.getOrderStatuses;
-      });
-    } else {
-      this.statuses = this.getOrderStatuses;
-    }
     if (this.getCategories.length === 0) {
       this.fetchCategories().then(() => {
         this.categories = this.getCategories;
@@ -408,33 +269,23 @@ export default {
     } else {
       this.categories = this.getCategories;
     }
-    if (this.getRateTypes.length === 0) {
-      this.fetchRateTypes().then(() => {
-        this.rateTypes = this.getRateTypes;
-      });
-    } else {
-      this.rateTypes = this.getRateTypes;
-    }
-    if (this.getOrders.length === 0) {
-      this.fetchOrders(this.request).then(() => {
+    if (this.getCars.length === 0) {
+      this.fetchCars(this.request).then(() => {
         this.loading = false;
-        this.orders = this.getOrders;
+        this.cars = this.getCars;
+        console.log(this.cars)
       });
     } else {
-      this.orders = this.getOrders;
+      this.cars = this.getCars;
     }
   },
   methods: {
     ...mapActions("entities",
       [
-        "fetchCities",
-        "fetchOrders",
-        "fetchOrderStatuses",
+        "fetchCars",
         "fetchCategories",
-        "fetchRateTypes",
         "deleteEntity",
-        "editEntity",
-        "changeStatusOfOrder"
+        "editEntity"
       ]),
     getImgPath(car) {
       if (typeof(car) != "undefined" && car !== null && car.thumbnail.path.length < 1000) {
@@ -444,38 +295,6 @@ export default {
     formatDate (date) {
       return new Date(date).toLocaleString([], this.dateSettings);
     },
-    resetFilters () {
-      this.filters = cloneDeep(this.defaultFilters);
-      this.reset = true;
-      this.orders = this.getOrders;
-    },
-    setFilters (newVal) {
-      this.loading = true;
-      this.orders = this.getOrders;
-      const filters = Object.values(newVal)
-      filters.forEach((value, key) => {
-        if (value !== null) {
-          if (key === 0) {
-            const filteredOrders = this.orders.filter(item => item.cityId);
-            this.orders = filteredOrders.filter(item => item.cityId.id === newVal.city);
-          }
-          if (key === 1) {
-            const filteredOrders = this.orders.filter(item => item.orderStatusId);
-            this.orders = filteredOrders.filter(item => item.orderStatusId.id === newVal.status);
-          }
-          if (key === 2) {
-            const filteredOrders = this.orders.filter(item => item.carId);
-            const filteredTwice = filteredOrders.filter(item => item.carId.categoryId);
-            this.orders = filteredTwice.filter(item => item.carId.categoryId.id === newVal.category)
-          }
-          if (key === 3) {
-            const filteredOrders = this.orders.filter(item => item.rateId);
-            this.orders = filteredOrders.filter(item => item.rateId.rateTypeId.id === newVal.rateType);
-          }
-        }
-      })
-      this.loading = false;
-    },
     toDelete (id) {
       this.deleteItem = {
         id: id,
@@ -484,23 +303,16 @@ export default {
       this.confirmDeleteForm = true;
       this.formKey++;
     },
-    fetchNewRows () {
-      this.loading = true;
-      this.fetchOrders(this.request).then(() => {
-        this.loading = false;
-        this.resetFilters();
-        this.orders = this.getOrders;
-      });
-    },
     formSuccessDelete (item) {
       this.closeForm();
+      const id = item.id;
       this.deleteEntity(item).then(() => {
-        this.fetchNewRows();
+        this.cars = this.cars.filter(item => item.id !== id);
         this.$toast.info('Удалено');
       });
     },
     toEdit (item, key) {
-      this.orderItem = item;
+      // this.orderItem = item;
       this.orderKey = key;
       this.formKey++;
       this.editOrderForm = true;
@@ -512,39 +324,17 @@ export default {
         entityName: 'order'
       }
       this.editEntity(entity).then(() => {
-        this.fetchNewRows();
+        this.loading = true;
+        // this.fetchOrders(this.request).then(() => {
+        //   this.loading = false;
+        //   this.orders = this.getOrders;
+        // });
         this.$toast.success('Успешно отредактировано');
       });
     },
     closeForm () {
       this.editOrderForm = false;
       this.confirmDeleteForm = false;
-    },
-    toChangeStatusToDone (id) {
-      this.statuses.forEach((status) => {
-        if (status.name === "Подтвержденные") {
-          this.doneStatus = status;
-        }
-      })
-      this.changeStatus(id, this.doneStatus);
-    },
-    toChangeStatusToCancel (id) {
-      this.statuses.forEach((status) => {
-        if (status.name === "Отмененые") {
-          this.cancelStatus = status;
-        }
-      })
-      this.changeStatus(id, this.cancelStatus);
-    },
-    changeStatus(id, status) {
-      const item = {
-        id: id,
-        status: status
-      }
-      this.changeStatusOfOrder(item).then(() => {
-        this.fetchNewRows();
-        this.$toast.success('Статус изменен');
-      });
     },
     truncate (string, limit) {
       if(string.length > limit){

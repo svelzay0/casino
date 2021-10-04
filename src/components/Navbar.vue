@@ -79,7 +79,7 @@ export default {
     items: [
         {
           title: 'Карточка автомобиля',
-          to: { name: 'CarCard' },
+          to: { name: 'Cars' },
           ico: 'mdi-pencil'
         },
         {

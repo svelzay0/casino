@@ -131,7 +131,7 @@
                               outlined
                               color="black"
                               v-on="on"
-                              @click="toEdit(item, items.map(function(x) {return x.id; }).indexOf(item.id))"
+                              @click="toEdit(item)"
                             >
                               <v-icon color="primary">mdi-pencil</v-icon>
                               <span class="order__actions_text">Изменить</span>
@@ -200,7 +200,6 @@ export default {
       items: [],
       itemHeaders: [],
       entity: null,
-      entityKey: null,
       deleteItem: null,
       formKey: 1,
       entityForm: false,
@@ -588,10 +587,9 @@ export default {
       this.formKey++;
       this.entityForm = true;
     },
-    toEdit (item, key) {
+    toEdit (item) {
       this.method = 'edit';
       this.entity = item;
-      this.entityKey = key;
       this.formKey++;
       this.entityForm = true;
     },

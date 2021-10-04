@@ -7,6 +7,7 @@ export default {
     cities: [],
     points: [],
     orders: [],
+    cars: [],
     orderStatuses: [],
     categories: [],
     rates: [],
@@ -21,6 +22,9 @@ export default {
     },
     setOrders(state, payload) {
       state.orders = payload;
+    },
+    setCars(state, payload) {
+      state.cars = payload;
     },
     setOrderStatuses(state, payload) {
       state.orderStatuses = payload;
@@ -56,6 +60,14 @@ export default {
       try {
         const { data } = await axios(ApiRequest("get", `/order?offset=${item.offset}&limit=${item.limit}`));
         commit("setOrders", data.data);
+      } catch (e) {
+        handleError(e);
+      }
+    },
+    async fetchCars({ commit }, item) {
+      try {
+        const { data } = await axios(ApiRequest("get", `/car?offset=${item.offset}&limit=${item.limit}`));
+        commit("setCars", data.data);
       } catch (e) {
         handleError(e);
       }
@@ -130,6 +142,9 @@ export default {
     },
     getOrders(state) {
       return state.orders;
+    },
+    getCars(state) {
+      return state.cars;
     },
     getOrderStatuses(state) {
       return state.orderStatuses;
