@@ -21,7 +21,7 @@
                 :loading="loading"
                 :items-per-page="5"
                 :footer-props="{
-                  'items-per-page-options': [5, 10, 20, 50, 100],
+                  'items-per-page-options': [5, 10],
                   'items-per-page-text':'Машин на странице:'
                 }"
                 loading-text="Загрузка машин, пожалуйста подождите..."
@@ -41,7 +41,7 @@
                   </v-row>
                 </template>
                 <template #[`item.car`]="{ item }">
-                  <v-row class="pa-0">
+                  <v-row class="pa-0 pt-6 pb-6">
                     <v-col cols="12" class="ma-0 pa-0">
                       Категория <br><b>{{ item.categoryId ? (truncate(item.categoryId.name,5)) : '-' }}</b>
                     </v-col>
@@ -214,7 +214,7 @@ export default {
   watch: {
     'itemsPerPage': function (newVal) {
       this.request.limit = newVal;
-      this.pageCount = 4100 / newVal;
+      this.pageCount = 70 / newVal;
       this.page = 1;
     },
     'page': function (newVal) {
@@ -248,8 +248,7 @@ export default {
       [
         "fetchCars",
         "fetchCategories",
-        "deleteEntity",
-        "editEntity"
+        "deleteEntity"
       ]),
     getImgPath(car) {
       if (typeof(car) != "undefined" && car !== null && car.thumbnail.path.length < 1000) {

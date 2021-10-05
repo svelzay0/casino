@@ -8,10 +8,11 @@ export default {
     points: [],
     orders: [],
     cars: [],
+    car: {},
     orderStatuses: [],
     categories: [],
     rates: [],
-    rateTypes: []
+    rateTypes: [],
   },
   mutations: {
     setCities(state, payload) {
@@ -25,6 +26,9 @@ export default {
     },
     setCars(state, payload) {
       state.cars = payload;
+    },
+    setCar(state, payload) {
+      state.car = payload;
     },
     setOrderStatuses(state, payload) {
       state.orderStatuses = payload;
@@ -72,6 +76,14 @@ export default {
         handleError(e);
       }
     },
+    async fetchCar({ commit }, id) {
+      try {
+        const { data } = await axios(ApiRequest("get", `/car/${id}`));
+        commit("setCar", data.data);
+      } catch (e) {
+        handleError(e);
+      }
+    },
     async fetchOrderStatuses({ commit }) {
       try {
         const { data } = await axios(ApiRequest("get", "/orderStatus"));
@@ -112,6 +124,7 @@ export default {
       }
     },
     async editEntity(context, item) {
+      console.log(item)
       try {
         await axios(ApiRequest("put", `/${item.entityName}/${item.item.id}`, item.item));
       } catch (e) {
@@ -145,6 +158,9 @@ export default {
     },
     getCars(state) {
       return state.cars;
+    },
+    getCar(state) {
+      return state.car;
     },
     getOrderStatuses(state) {
       return state.orderStatuses;
