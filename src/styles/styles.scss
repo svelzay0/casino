@@ -74,6 +74,10 @@
   width: 128px;
   height: 58px;
 }
+.cars__car_image {
+  width: 400px;
+  height: 270px;
+}
 .order__actions {
   width: 120px;
 }
@@ -92,6 +96,10 @@
   .order__actions_text {
     display: none;
   }
+  .cars__car_image {
+    width: 300px;
+    height: 170px;
+  }
 }
 
 // desktop-medium(1266px - 1465px)
@@ -101,6 +109,10 @@
   }
   .order__actions_text {
     display: none;
+  }
+  .cars__car_image {
+    width: 240px;
+    height: 130px;
   }
 }
 
@@ -148,6 +160,10 @@
   .order__actions {
     width: 30px;
   }
+  .cars__car_image {
+    width: 210px;
+    height: 110px;
+  }
 }
 
 // kettle (0px - 320px)
@@ -157,5 +173,9 @@
   }
   .order__addition_info {
     display: none;
+  }
+  .cars__car_image {
+    width: 160px;
+    height: 70px;
   }
 }

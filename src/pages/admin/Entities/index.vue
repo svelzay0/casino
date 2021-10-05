@@ -55,6 +55,7 @@
                 color="info"
                 @click="toCreate"
               >
+                <v-icon>mdi-plus</v-icon>
                 <span>{{ createTitle }}</span>
               </v-btn>
             </v-col>

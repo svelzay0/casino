@@ -5,6 +5,16 @@
         <v-card-text>
           <v-row align="center" justify="center">
             <v-col cols="12">
+              <v-btn
+                class="entity__create_btn"
+                color="info"
+                :to="{ name: 'Cars.create' }"
+              >
+                <v-icon>mdi-plus</v-icon>
+                {{ 'Создать автомобиль' }}
+              </v-btn>
+            </v-col>
+            <v-col cols="12">
               <v-data-table
                 :headers="orderHeaders"
                 :items="cars"
@@ -20,65 +30,66 @@
                 <template #[`item.info`]="{ item }">
                   <v-row>
                     <v-col cols="12" class="order__addition_info pb-0 mb-0">
-                      г. {{ item.cityId ? item.cityId.name : '-' }}
+                      Модель <br><b>{{ item.name ? item.name : '-' }}</b>
                     </v-col>
                     <v-col cols="12" class="ma-0 pa-0 pl-3">
-                      {{ item.dateFrom ? formatDate(item.dateFrom) : '-' }} - {{ item.dateTo ? formatDate(item.dateTo) : '-' }}
+                      Описание <br>{{ item.description ? item.description : '-' }}
                     </v-col>
                     <v-col cols="12" class="order__addition_info pt-0 mt-0">
-                      Цвет <b>{{ item.color ? item.color : '-' }}</b>
+                      Бак {{ item.tank ? item.tank + ' литров' : '-' }}
                     </v-col>
                   </v-row>
                 </template>
                 <template #[`item.car`]="{ item }">
-                  <v-row>
+                  <v-row class="pa-0">
                     <v-col cols="12" class="ma-0 pa-0">
-                      Статус <b>{{ item.orderStatusId ? (truncate(item.orderStatusId.name,5)) : '-' }}</b>
+                      Категория <br><b>{{ item.categoryId ? (truncate(item.categoryId.name,5)) : '-' }}</b>
                     </v-col>
-                    <v-col cols="12" class="order__addition_info ma-0 pa-0">
-                      Тариф <b>{{ item.rateId ? (item.rateId.rateTypeId ? item.rateId.rateTypeId.name : '-') : '-' }}</b>
+                    <v-col cols="12" class="ma-0 pa-0">
+                      Описание <br><b>{{ item.categoryId ? (truncate(item.categoryId.description,20)) : '-' }}</b>
                     </v-col>
-                    <v-col cols="12" class="order__addition_info ma-0 pa-0">
-                      Категория <b>{{ item.carId ? (item.carId.categoryId ? item.carId.categoryId.name : '-') : '-' }}</b>
-                    </v-col>
-                    <v-col cols="12" class="order__addition_info ma-0 pa-0">
-                      Номер <b class="primary--text">{{ item.carId ? item.carId.number : '-' }}</b>
+                    <v-col cols="12" class="ma-0 pa-0">
+                      Номер <b class="primary--text">{{ item.number ? item.number : '-' }}</b>
                     </v-col>
                   </v-row>
                 </template>
-                <template #[`item.additionals`]="{ item }">
-                  <v-checkbox
-                    class="pa-0 ma-0 pt-6"
-                    v-model="item.isFullTank"
-                    :label="'Полный бак'"
-                    disabled
-                  />
-                  <v-checkbox
-                    class="pa-0 ma-0"
-                    v-model="item.isNeedChildChair"
-                    :label="'Детское кресло'"
-                    disabled
-                  />
-                  <v-checkbox
-                    class="pa-0 ma-0"
-                    v-model="item.isRightWheel"
-                    :label="'Правый руль'"
-                    disabled
-                  />
+                <template #[`item.colors`]="{ item }">
+                  <v-row class="pt-6 pb-6">
+                    <div v-if="item.colors.length > 0">
+                      <v-col cols="12" class="ma-0 pa-0">
+                        От <b>{{ item.priceMin ? item.priceMin : '-' }}</b>
+                      </v-col>
+                      <v-col cols="12" class="ma-0 pa-0">
+                        До <b>{{ item.priceMax ? item.priceMax : '-' }}</b>
+                      </v-col>
+                      <v-col v-for="(color, index) in item.colors" :key="index" cols="12" class="order__addition_info ma-0 pa-0">
+                        - <b>{{ color }}</b>
+                      </v-col>
+                    </div>
+                    <div v-else>
+                      -
+                    </div>
+                  </v-row>
                 </template>
-                <template #[`item.price`]="{ item }">
-                  <div>
-                    <v-card-title>{{ item.price ? item.price + ' ₽' : '-' }}</v-card-title>
-                  </div>
+                <template #[`item.createdAt`]="{ item }">
+                  <v-row class="pt-6 pb-6">
+                    <v-col cols="12" class="ma-0 pa-0 pl-3">
+                      Создано {{ item.createdAt ? formatDate(item.createdAt) : '-' }}
+                    </v-col>
+                    <v-col cols="12" class="ma-0 pa-0 pl-3">
+                      Изменено {{ item.updatedAt ? formatDate(item.updatedAt) : '-' }}
+                    </v-col>
+                  </v-row>
                 </template>
                 <template #[`item.photo`]="{ item }">
                   <img
                     class="model__car_image"
-                    :src="getImgPath(item.carId)"
+                    :src="getImgPath(item)"
                     alt=""
+                    @error="defaultImage"
                   />
                 </template>
-                <template #[`item.actions`]="{ item }">
+                <template #[`item.carCard`]="{ item }">
                   <v-row>
                     <v-col cols="12">
                       <v-btn-toggle
@@ -94,31 +105,12 @@
                               outlined
                               color="black"
                               v-on="on"
-                              @click="toDelete(item.id)"
+                              :to="{ name: 'Cars.edit', params: { id: item.id } }"
                             >
-                              <v-icon color="red">mdi-delete</v-icon>
-                              <span class="order__actions_text">Удалить</span>
-                        </v-btn>
-                          </template>
-                          <span>{{ 'Удалить' }}</span>
-                        </v-tooltip>
-                        <v-tooltip
-                          bottom
-                        >
-                          <template #activator="{ on, attrs }">
-                            <v-btn
-                              class="order__actions"
-                              v-bind="attrs"
-                              outlined
-                              color="black"
-                              v-on="on"
-                              @click="toEdit(item)"
-                            >
-                              <v-icon color="primary">mdi-pencil</v-icon>
-                              <span class="order__actions_text">Изменить</span>
+                              <v-icon color="success">mdi-pencil</v-icon>
                             </v-btn>
                           </template>
-                          <span>{{ 'Изменить' }}</span>
+                          <span>{{ 'Карточка автомобиля - ' + item.name }}</span>
                         </v-tooltip>
                       </v-btn-toggle>
                     </v-col>
@@ -136,24 +128,6 @@
             </v-col>
           </v-row>
         </v-card-text>
-        <!-- <v-dialog v-model="editOrderForm" max-width="700">
-          <edit-order-form
-            :key="formKey"
-            :order-item="orderItem"
-            :statuses="statuses"
-            @cancel="closeForm()"
-            @success="formSuccess($event)"
-          />
-        </v-dialog>
-        <v-dialog v-model="confirmDeleteForm" max-width="700">
-          <confirm-delete-form
-            :key="formKey"
-            :entity="deleteItem"
-            :table-name="'order'"
-            @cancel="closeForm()"
-            @successDelete="formSuccessDelete($event)"
-          />
-        </v-dialog> -->
       </v-card>
     </v-col>
   </v-row>
@@ -161,15 +135,9 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-// import EditOrderForm from './EditOrderForm'
-// import ConfirmDeleteForm from '../../../components/ConfirmDeleteForm'
 
 export default {
   name: "Cars",
-  components: {
-    // EditOrderForm,
-    // ConfirmDeleteForm
-  },
   data() {
     return {
       imgDefPath: require("@/assets/default_car.jpg"),
@@ -184,9 +152,6 @@ export default {
       categories: [],
       formKey: 1,
       itemsPerPage: 5,
-      editOrderForm: false,
-      confirmDeleteForm: false,
-      deleteItem: null,
       dateSettings: {
         year: 'numeric',
         month: 'numeric',
@@ -220,19 +185,19 @@ export default {
           width: "18%"
         },
         {
-          value: "price",
-          text: "Цены",
+          value: "colors",
+          text: "Цены и цвета",
           searchable: false,
           sortable: false,
           width: "18%"
         },
         {
-          value: "timestamp",
-          text: "Сорт. цены",
+          value: "createdAt",
+          text: "Дата создания",
           width: "18%"
         },
         {
-          value: "actions",
+          value: "carCard",
           text: "",
           searchable: false,
           sortable: false,
@@ -273,7 +238,6 @@ export default {
       this.fetchCars(this.request).then(() => {
         this.loading = false;
         this.cars = this.getCars;
-        console.log(this.cars)
       });
     } else {
       this.cars = this.getCars;
@@ -295,47 +259,6 @@ export default {
     formatDate (date) {
       return new Date(date).toLocaleString([], this.dateSettings);
     },
-    toDelete (id) {
-      this.deleteItem = {
-        id: id,
-        entity: 'order'
-      }
-      this.confirmDeleteForm = true;
-      this.formKey++;
-    },
-    formSuccessDelete (item) {
-      this.closeForm();
-      const id = item.id;
-      this.deleteEntity(item).then(() => {
-        this.cars = this.cars.filter(item => item.id !== id);
-        this.$toast.info('Удалено');
-      });
-    },
-    toEdit (item, key) {
-      // this.orderItem = item;
-      this.orderKey = key;
-      this.formKey++;
-      this.editOrderForm = true;
-    },
-    formSuccess (item) {
-      this.closeForm();
-      const entity = {
-        item: item,
-        entityName: 'order'
-      }
-      this.editEntity(entity).then(() => {
-        this.loading = true;
-        // this.fetchOrders(this.request).then(() => {
-        //   this.loading = false;
-        //   this.orders = this.getOrders;
-        // });
-        this.$toast.success('Успешно отредактировано');
-      });
-    },
-    closeForm () {
-      this.editOrderForm = false;
-      this.confirmDeleteForm = false;
-    },
     truncate (string, limit) {
       if(string.length > limit){
         return string.substring(0,limit)+"...";
@@ -346,6 +269,9 @@ export default {
     },
     getItemPerPage(val) {
       this.itemsPerPage = val;
+    },
+    defaultImage(e) {
+      e.target.src = this.imgDefPath;
     }
   }
 };
