@@ -30,16 +30,16 @@ const routes = [
         component: () => import("../pages/admin/CarCard"),
       },
       {
-        path: "list",
-        name: "CarList",
+        path: "entities",
+        name: "Entities",
         beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/CarList"),
+        component: () => import("../pages/admin/Entities/index.vue"),
       },
       {
         path: "orders",
         name: "Orders",
         beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/Orders"),
+        component: () => import("../pages/admin/Orders/index.vue"),
       },
       {
         path: "menu5",

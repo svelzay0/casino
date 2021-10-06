@@ -4,7 +4,7 @@
     padless
   >
     <v-card
-      class="flex"
+      class="footer__main flex"
       flat
       tile
     >

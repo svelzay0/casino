@@ -29,8 +29,11 @@
 .admin__footer_links {
   height: 70px;
 }
-
-// desktop-min (1024px - 1023px)
+.v-data-table__wrapper {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+// desktop-min (1024px - 1265px)
 @media screen and (max-width: $desktop-min) {
   .col__borders {
     border-right: 0px solid $main-border-gray !important;
@@ -42,5 +45,25 @@
 @media screen and (max-width: $tablet) {
   .col__borders {
     display: none;
+  }
+  .v-btn-toggle {
+    flex-direction: column !important;
+  }
+  .v-btn-toggle > .v-btn.v-btn {
+    border: none !important;
+  }
+}
+
+// mobile (320px - 767px)
+@media screen and (max-width: $mobile) {
+  .v-btn-toggle {
+    display: block !important;
+  }
+}
+
+// kettle (0px - 320px)
+@media screen and (max-width: $kettle) {
+  .v-btn-toggle {
+    display: block !important;
   }
 }

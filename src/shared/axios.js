@@ -2,8 +2,6 @@ import axios from "axios";
 import headers from "./headers";
 import store from '../store/index'
 
-const base64Token = localStorage.getItem("token64");
-
 const axiosApi = axios.create();
 
 axiosApi.interceptors.request.use( config => {
@@ -13,10 +11,10 @@ axiosApi.interceptors.request.use( config => {
       config.headers = headers(process.env, localStorage.getItem("token"), 'Bearer ');
       localStorage.removeItem("logout");
     } else {
-      config.headers = headers(process.env, base64Token, 'Basic ');
+      config.headers = headers(process.env, store.state.user.base64Token, 'Basic ');
     }
   } else {
-    config.headers = headers(process.env, base64Token, 'Basic ');
+    config.headers = headers(process.env, store.state.user.base64Token, 'Basic ');
   }
   config.baseURL = process.env.VUE_APP_API_PROD;
 
@@ -33,7 +31,7 @@ axiosApi.interceptors.response.use(response => response, error => {
       } else {
         store.dispatch('user/logoutUser');
       }
-    } 
+    }
   }
 
   return Promise.reject(error)

@@ -10,7 +10,9 @@
             </span>
           </div>
         </div>
-        <router-view />
+        <keep-alive>
+          <router-view />
+        </keep-alive>
       </v-container>
     </v-main>
   </v-app>
@@ -24,13 +26,24 @@ export default {
   components: {
     Navbar
   },
-  metaInfo () {
-    return { title: this.title }
+  data() {
+    return {
+      menuItems: {
+        orders: {name: 'Заказы', url: '/orders'},
+        home: {name: 'Домашнаяя страница', url: '/home'},
+        carCard: {name: 'Карточка автомобиля', url: '/car'},
+        entities: {name: 'Сущности', url: '/entities'},
+        menu5: {name: 'Меню 5', url: '/menu5'},
+        menu6: {name: 'Меню 6', url: '/menu6'},
+        menu7: {name: 'Меню 7', url: '/menu7'}
+      },
+    }
   },
   computed: {
     title () {
-      return this.$route.name
+      const routeName = this.$route.name[0].toLowerCase() + this.$route.name.slice(1);
+      return this.menuItems[routeName]?.name || 'Добро пожаловать!';
     }
-  },
+  }
 }
 </script>
