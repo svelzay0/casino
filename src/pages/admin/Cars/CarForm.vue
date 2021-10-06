@@ -85,8 +85,8 @@
               <v-text-field
                 v-model="car.name"
                 label='Модель автомобиля'
-                clearable
                 required
+                :rules="nameRules"
               />
             </v-col>
             <v-col
@@ -100,8 +100,8 @@
               <v-text-field
                 v-model="car.description"
                 label='Описание'
-                clearable
                 required
+                :rules="nameRules"
               />
             </v-col>
             <v-col
@@ -116,8 +116,8 @@
                 v-model="car.priceMin"
                 label='Минимальная стоимость'
                 v-mask="'##########'"
-                clearable
                 required
+                :rules="priceRules"
               />
             </v-col>
             <v-col
@@ -132,8 +132,8 @@
                 v-model="car.priceMax"
                 label='Максимальная стоимость'
                 v-mask="'##########'"
-                clearable
                 required
+                :rules="priceRules"
               />
             </v-col>
             <v-col
@@ -165,8 +165,8 @@
               <v-text-field
                 v-model="car.number"
                 label='Номер'
-                clearable
                 required
+                :rules="nameRules"
               />
             </v-col>
             <v-col
@@ -181,8 +181,8 @@
                 v-model="car.tank"
                 label='Вместимость бака в литрах'
                 v-mask="'##########'"
-                clearable
                 required
+                :rules="priceRules"
               />
             </v-col>
             <v-col cols="12">
@@ -203,17 +203,38 @@
         <v-card-actions>
           <v-spacer/>
           <v-btn
-            :to="{ name: 'cars' }"
+            :to="{ name: 'Cars' }"
           >
             Отмена
           </v-btn>
           <v-btn
+            v-if="modelId"
+            color="red text-white"
+            @click="toDelete"
+          >
+            Удалить
+          </v-btn>
+          <v-btn
             color="primary"
+            :disabled="car.name.length < 3
+                      || car.description.length < 3
+                      || car.description.length < 3
+                      || car.number.length < 3
+                      || car.priceMin < 1
+                      || car.priceMax < 1"
             @click="submit"
           >
             Сохранить
           </v-btn>
         </v-card-actions>
+        <v-dialog v-model="confirmDeleteForm" max-width="700">
+          <confirm-delete-form
+            :key="formKey"
+            :entity="deleteItem"
+            @cancel="closeForm()"
+            @successDelete="formSuccessDelete($event)"
+          />
+        </v-dialog>
       </v-card>
     </v-col>
   </v-row>
@@ -221,9 +242,13 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import ConfirmDeleteForm from '../../../components/ConfirmDeleteForm'
 
 export default {
   name: 'CarForm',
+   components: {
+    ConfirmDeleteForm
+  },
   props: {
     modelId: {
       type: [String, Number],
@@ -233,15 +258,21 @@ export default {
   data () {
     return {
       fileInput: null,
+      nameRules: [
+        v => v.length >= 3 || 'Необходимо минимум 3 символа'
+      ],
+      priceRules: [
+        v => v > 0 || 'Стоимость должна быть больше нуля'
+      ],
       car: {
         name: '',
         description: '',
         number: '',
         colors: [],
         categoryId: null,
-        priceMin: null,
-        priceMax: null,
-        tank: null,
+        priceMin: 0,
+        priceMax: 0,
+        tank: 0,
         thumbnail: {
           mimetype: '',
           originalname: '',
@@ -268,47 +299,40 @@ export default {
       ],
       imgDefPath: require("@/assets/default_car.jpg"),
       editedId: '',
-      editedCar: null
+      editedCar: null,
+      nameBool: false,
+      descriptionBool: false,
+      numberBool: false,
+      colorsBool: false,
+      categoryIdBool: false,
+      priceMinBool: false,
+      priceMaxBool: false,
+      tankBool: false,
+      thumbnailBool: false,
+      confirmDeleteForm: false,
+      deleteItem: null,
+      formKey: 1,
+      method: null
     }
   },
   mounted () {
-    this.editedCar = { ...this.car };
-    if (this.editedId !== this.modelId) {
-      this.fetchCar(this.modelId).then(() => {
-        this.car = { ...this.getCar };
-        this.fileInput = {
-          size: this.car.thumbnail.size,
-          type: this.car.thumbnail.mimetype,
-          name: this.car.thumbnail.originalname,
-        }
-        if (this.car.name.length > 0) {
-          this.fullness += 11;
-        }
-        if (this.car.number.length > 0) {
-          this.fullness += 11;
-        }
-        if (this.car.categoryId) {
-          this.fullness += 11;
-        }
-        if (this.car.colors.length > 0) {
-          this.fullness += 11;
-        }
-        if (this.car.description.length > 0) {
-          this.fullness += 11;
-        }
-        if (this.car.priceMin) {
-          this.fullness += 11;
-        }
-        if (this.car.priceMax) {
-          this.fullness += 11;
-        }
-        if (this.car.tank) {
-          this.fullness += 11;
-        }
-        if (this.car.thumbnail.size > 0) {
-          this.fullness += 12;
-        }
-      });
+    if (this.modelId) {
+      this.method = 'edit';
+      this.editedCar = { ...this.car };
+      if (this.editedId !== this.modelId) {
+        this.fetchCar(this.modelId).then(() => {
+          this.car = { ...this.getCar };
+          this.fileInput = {
+            size: this.car.thumbnail.size,
+            type: this.car.thumbnail.mimetype,
+            name: this.car.thumbnail.originalname,
+            path: this.car.thumbnail.path
+          }
+        });
+      }
+      this.editedId = this.modelId;
+    } else {
+      this.method = 'create';
     }
     if (this.getCategories.length === 0) {
       this.fetchCategories().then(() => {
@@ -317,7 +341,6 @@ export default {
     } else {
       this.categories = this.getCategories;
     }
-    this.editedId = this.modelId;
   },
   computed: {
     title () {
@@ -338,23 +361,114 @@ export default {
             size: this.car.thumbnail.size,
             type: this.car.thumbnail.mimetype,
             name: this.car.thumbnail.originalname,
+            path: this.car.thumbnail.path
           }
         });
       } else {
         this.car = { ...this.editedCar };
       }
     },
-    car: {
-      handler (newVal) {
-        console.log(newVal)
-        // if (this.car.name.length > 0) {
-        //   this.fullness += 10;
-        // } else {
-        //   this.fullness -= 10;
-        // }
-        // this.reset = false;
-      },
-      deep: true
+    'car.name': function (newVal) {
+      // Это для отображения ползунка заполненности карточки.
+      // Пытался этот ужас отрефакторить, вынести в функцию, но не получилось, так как все this.булевы разные,
+      // и их там не переопределишь принимая this.булев в качестве аргумента
+      if (newVal.length > 0) {
+        if (this.nameBool === false) {
+          this.fullness += 11;
+        }
+        this.nameBool = true;
+      } else {
+        this.fullness -= 11;
+        this.nameBool = false;
+      }
+    },
+    'car.description': function (newVal) {
+      if (newVal.length > 0) {
+        if (this.descriptionBool === false) {
+          this.fullness += 11;
+        }
+        this.descriptionBool = true;
+      } else {
+        this.fullness -= 11;
+        this.descriptionBool = false;
+      }
+    },
+    'car.number': function (newVal) {
+      if (newVal.length > 0) {
+        if (this.numberBool === false) {
+          this.fullness += 11;
+        }
+        this.numberBool = true;
+      } else {
+        this.fullness -= 11;
+        this.numberBool = false;
+      }
+    },
+    'car.colors': function (newVal) {
+      if (newVal.length > 0) {
+        if (this.colorsBool === false) {
+          this.fullness += 11;
+        }
+        this.colorsBool = true;
+      } else {
+        this.fullness -= 11;
+        this.colorsBool = false;
+      }
+    },
+    'car.categoryId': function (newVal) {
+      if (newVal) {
+        if (this.categoryIdBool === false) {
+          this.fullness += 11;
+        }
+        this.categoryIdBool = true;
+      } else {
+        this.fullness -= 11;
+        this.categoryIdBool = false;
+      }
+    },
+    'car.priceMin': function (newVal) {
+      if (newVal) {
+        if (this.priceMinBool === false) {
+          this.fullness += 11;
+        }
+        this.priceMinBool = true;
+      } else {
+        this.fullness -= 11;
+        this.priceMinBool = false;
+      }
+    },
+    'car.priceMax': function (newVal) {
+      if (newVal) {
+        if (this.priceMaxBool === false) {
+          this.fullness += 11;
+        }
+        this.priceMaxBool = true;
+      } else {
+        this.fullness -= 11;
+        this.priceMaxBool = false;
+      }
+    },
+    'car.tank': function (newVal) {
+      if (newVal) {
+        if (this.tankBool === false) {
+          this.fullness += 11;
+        }
+        this.tankBool = true;
+      } else {
+        this.fullness -= 11;
+        this.tankBool = false;
+      }
+    },
+    'car.thumbnail': function (newVal) {
+      if (newVal.size > 0) {
+        if (this.thumbnailBool === false) {
+          this.fullness += 12;
+        }
+        this.thumbnailBool = true;
+      } else {
+        this.fullness -= 12;
+        this.thumbnailBool = false;
+      }
     }
   },
   methods: {
@@ -362,27 +476,59 @@ export default {
       [
         "fetchCar",
         "fetchCategories",
-        "editEntity"
+        "editEntity",
+        "createEntity",
+        "deleteEntity"
       ]),
     submit () {
       const entity = {
         entityName: 'car',
         item: this.car
       }
-      this.editEntity(entity).then(() => {
+      if (this.modelId) {
+        this.editEntity(entity).then(() => {
+          this.$router.push("/admin/cars");
+          this.$toast.success('Успешно отредактировано');
+        });
+      } else {
+        this.createEntity(entity).then(() => {
+          this.$router.push("/admin/cars");
+          this.$toast.success('Успешно создано');
+        });
+      }
+    },
+    toDelete () {
+      this.deleteItem = {
+        entity: 'car',
+        id: this.modelId
+      }
+      this.confirmDeleteForm = true;
+      this.formKey++;
+    },
+    formSuccessDelete (item) {
+      this.closeForm();
+      this.deleteEntity(item).then(() => {
         this.$router.push("/admin/cars");
-        this.$toast.success('Успешно отредактировано');
+        this.$toast.info('Удалено');
       });
-      
+    },
+    closeForm () {
+      this.confirmDeleteForm = false;
     },
     getImgPath(car) {
-      if (typeof(car) != "undefined" && car !== null) {
-        if (!car.thumbnail.path && this.fileInput && this.modelId) {
-          return URL.createObjectURL(this.fileInput);
-        } else if (this.fileInput) {
-          return `${process.env.VUE_APP_API_IMG}${car.thumbnail.path}`;
+      if (this.modelId) {
+        if (typeof(car) != "undefined" && car !== null) {
+          if (!car.thumbnail.path && this.fileInput) {
+            return URL.createObjectURL(this.fileInput);
+          } else if (this.fileInput) {
+            return `${process.env.VUE_APP_API_IMG}${car.thumbnail.path}`;
+          } else return this.imgDefPath;
         } else return this.imgDefPath;
-      } else return this.imgDefPath;
+      } else {
+         if (this.fileInput && this.method === 'create') {
+           return URL.createObjectURL(this.fileInput);
+         } else return this.imgDefPath;
+      }
     },
     defaultImage(e) {
       e.target.src = this.imgDefPath;
@@ -393,6 +539,20 @@ export default {
           mimetype: this.fileInput.type,
           originalname: this.fileInput.name,
           size: this.fileInput.size,
+          path: require("@/files/qashqai.png")
+          // path: this.fileInput.webkitRelativePath
+          // path: `/files/${this.fileInput.name}`
+          // path: require(`@/assets/${this.fileInput.name}`)
+          // path: `/files/${this.fileInput.name}` // path: "/files/5eb4137e099b810b946c87d9_qashqai.png"
+        }
+        // console.log(this.fileInput,`/files/${this.fileInput.name}`)
+        // console.log(this.car.thumbnail)
+      } else {
+        this.car.thumbnail = {
+          mimetype: '',
+          originalname: '',
+          path: '',
+          size: 0,
         }
       }
     }

@@ -30,7 +30,7 @@ export default {
     return {
       menuItems: {
         orders: {name: 'Заказы', url: '/orders'},
-        home: {name: 'Домашнаяя страница', url: '/home'},
+        home: {name: 'Домашняя страница', url: '/home'},
         cars: {name: 'Автомобили', url: '/cars',
           create: {
             name: 'Создать автомобиль', url: '/cars/create'
@@ -40,6 +40,7 @@ export default {
           },
         },
         entities: {name: 'Сущности', url: '/entities'},
+        error: {name: ' ', url: '/error'},
         menu5: {name: 'Меню 5', url: '/menu5'},
         menu6: {name: 'Меню 6', url: '/menu6'},
         menu7: {name: 'Меню 7', url: '/menu7'}

@@ -14,6 +14,7 @@ const routes = [
   {
     path: '/admin',
     name: 'Admin',
+    redirect: { name: 'Home' },
     beforeEnter: AuthGuard,
     component: () => import("../layouts/AppLayout.vue"),
     children: [
@@ -54,6 +55,11 @@ const routes = [
         component: () => import("../pages/admin/Orders/index.vue"),
       },
       {
+        path: "error",
+        name: "Error",
+        component: () => import("../pages/admin/Error"),
+      },
+      {
         path: "menu5",
         name: "Menu5",
         beforeEnter: AuthGuard,
@@ -75,7 +81,8 @@ const routes = [
   },
   {
     path: "*",
-    name: "Error",
+    redirect: { name: 'Error' },
+    name: "MainError",
     component: () => import("../pages/admin/Error"),
   },
 ]

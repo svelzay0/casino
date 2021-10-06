@@ -166,7 +166,6 @@
           <confirm-delete-form
             :key="formKey"
             :entity="deleteItem"
-            :table-name="filters.tableName"
             @cancel="closeForm()"
             @successDelete="formSuccessDelete($event)"
           />

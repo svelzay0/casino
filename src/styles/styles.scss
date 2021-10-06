@@ -87,6 +87,14 @@
 .order__hrs {
   display: none;
 }
+.error__main {
+  padding-top: 100px;
+}
+.error__text {
+  color:$main-semilight-gray;
+  font-size: 120px;
+  font-weight: 300;
+}
 
 // desktop(1466px - 2048px)
 @media screen and (max-width: $desktop) {

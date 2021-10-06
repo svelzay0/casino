@@ -246,7 +246,6 @@
           <confirm-delete-form
             :key="formKey"
             :entity="deleteItem"
-            :table-name="'order'"
             @cancel="closeForm()"
             @successDelete="formSuccessDelete($event)"
           />

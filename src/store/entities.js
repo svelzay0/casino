@@ -123,10 +123,12 @@ export default {
         handleError(e);
       }
     },
-    async editEntity(context, item) {
-      console.log(item)
+    async editEntity({ commit }, item) {
       try {
         await axios(ApiRequest("put", `/${item.entityName}/${item.item.id}`, item.item));
+        if (item.entityName === 'car') {
+          commit("setCar", null);
+        }
       } catch (e) {
         handleError(e);
       }

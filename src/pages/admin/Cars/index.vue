@@ -208,6 +208,7 @@ export default {
     ...mapGetters("entities",
       [
         "getCars",
+        "getCar",
         "getCategories"
       ])
   },
@@ -219,11 +220,15 @@ export default {
     },
     'page': function (newVal) {
       this.request.offset = newVal * this.request.limit;
-      this.loading = true;
-      this.fetchCars(this.request).then(() => {
-        this.loading = false;
-        this.cars = this.getCars;
-      });
+      this.fetchRows();
+    },
+    getCar: {
+      handler (newVal) {
+        if (!newVal) {
+          this.fetchRows();
+        }
+      },
+      deep: true
     }
   },
   mounted() {
@@ -235,10 +240,7 @@ export default {
       this.categories = this.getCategories;
     }
     if (this.getCars.length === 0) {
-      this.fetchCars(this.request).then(() => {
-        this.loading = false;
-        this.cars = this.getCars;
-      });
+      this.fetchRows();
     } else {
       this.cars = this.getCars;
     }
@@ -271,6 +273,13 @@ export default {
     },
     defaultImage(e) {
       e.target.src = this.imgDefPath;
+    },
+    fetchRows() {
+      this.loading = true;
+      this.fetchCars(this.request).then(() => {
+        this.loading = false;
+        this.cars = this.getCars;
+      });
     }
   }
 };
