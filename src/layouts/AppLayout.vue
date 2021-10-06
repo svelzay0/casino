@@ -20,44 +20,22 @@
 
 <script>
 import Navbar from '../components/Navbar'
+import { mapGetters } from "vuex";
 
 export default {
   name: 'AppLayout',
   components: {
     Navbar
   },
-  data() {
-    return {
-      menuItems: {
-        orders: {name: 'Заказы', url: '/orders'},
-        home: {name: 'Домашняя страница', url: '/home'},
-        cars: {name: 'Автомобили', url: '/cars',
-          create: {
-            name: 'Создать автомобиль', url: '/cars/create'
-          },
-          edit: {
-            name: 'Карточка автомобиля', url: '/cars/edit'
-          },
-        },
-        entities: {name: 'Сущности', url: '/entities'},
-        error: {name: ' ', url: '/error'},
-        menu5: {name: 'Меню 5', url: '/menu5'},
-        menu6: {name: 'Меню 6', url: '/menu6'},
-        menu7: {name: 'Меню 7', url: '/menu7'}
-      },
-    }
-  },
   computed: {
     title () {
-      if (this.$route.name.slice(5) === 'create') {
-        return this.menuItems['cars'].create.name;
-      } else if (this.$route.name.slice(5) === 'edit') {
-        return this.menuItems['cars'].edit.name;
-      } else {
-        const routeName = this.$route.name[0].toLowerCase() + this.$route.name.slice(1);
-        return this.menuItems[routeName]?.name || 'Добро пожаловать!';
-      }
-    }
+      const routeName = this.$route.name[0].toLowerCase() + this.$route.name.slice(1);
+      return this.menuItems[routeName]?.name || 'Добро пожаловать!';
+    },
+    ...mapGetters("shared",
+      [
+        "menuItems"
+      ])
   }
 }
 </script>

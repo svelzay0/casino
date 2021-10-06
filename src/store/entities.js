@@ -116,9 +116,10 @@ export default {
         handleError(e);
       }
     },
-    async deleteEntity(context, item) {
+    async deleteEntity({ commit }, item) {
       try {
         await axios(ApiRequest("delete", `/${item.entity}/${item.id}`));
+        resetCar({ commit }, item.entity);
       } catch (e) {
         handleError(e);
       }
@@ -126,16 +127,15 @@ export default {
     async editEntity({ commit }, item) {
       try {
         await axios(ApiRequest("put", `/${item.entityName}/${item.item.id}`, item.item));
-        if (item.entityName === 'car') {
-          commit("setCar", null);
-        }
+        resetCar({ commit }, item.entityName);
       } catch (e) {
         handleError(e);
       }
     },
-    async createEntity(context, item) {
+    async createEntity({ commit }, item) {
       try {
         await axios(ApiRequest("post", `/${item.entityName}`, item.item));
+        resetCar({ commit }, item.entityName);
       } catch (e) {
         handleError(e);
       }
@@ -189,5 +189,11 @@ const ApiRequest = (method, url, data = null) => {
       "Authorization": "Bearer " + localStorage.getItem("token")
     },
     data: data
+  }
+}
+
+const resetCar = ({ commit }, entity) => {
+  if (entity === 'car') {
+    commit("setCar", null);
   }
 }

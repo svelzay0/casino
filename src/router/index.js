@@ -39,6 +39,7 @@ const routes = [
       {
         path: "cars/:id/edit",
         name: "Cars.edit",
+        props: true,
         beforeEnter: AuthGuard,
         component: () => import("../pages/admin/Cars/edit.vue"),
       },

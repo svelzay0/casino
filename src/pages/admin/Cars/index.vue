@@ -15,9 +15,11 @@
               </v-btn>
             </v-col>
             <v-col cols="12">
+              <v-skeleton-loader v-if="loading" type="table"/>
               <v-data-table
                 :headers="orderHeaders"
                 :items="cars"
+                v-show="!loading"
                 :loading="loading"
                 :items-per-page="5"
                 :footer-props="{
@@ -36,7 +38,7 @@
                       Описание <br>{{ item.description ? item.description : '-' }}
                     </v-col>
                     <v-col cols="12" class="order__addition_info pt-0 mt-0">
-                      Бак {{ item.tank ? item.tank + ' литров' : '-' }}
+                      Бак {{ item.tank ? `${item.tank} литров` : '-' }}
                     </v-col>
                   </v-row>
                 </template>
@@ -134,7 +136,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "Cars",
@@ -179,7 +181,7 @@ export default {
         },
         {
           value: "car",
-          text: "Дополнительно",
+          text: "Доп.",
           searchable: false,
           sortable: false,
           width: "18%"
@@ -213,12 +215,12 @@ export default {
       ])
   },
   watch: {
-    'itemsPerPage': function (newVal) {
+    itemsPerPage: function (newVal) {
       this.request.limit = newVal;
       this.pageCount = 70 / newVal;
       this.page = 1;
     },
-    'page': function (newVal) {
+    page: function (newVal) {
       this.request.offset = newVal * this.request.limit;
       this.fetchRows();
     },
@@ -232,6 +234,9 @@ export default {
     }
   },
   mounted() {
+    if (this.getCar) {
+      this.setCar(null);
+    }
     if (this.getCategories.length === 0) {
       this.fetchCategories().then(() => {
         this.categories = this.getCategories;
@@ -246,6 +251,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('entities', ['setCar']),
     ...mapActions("entities",
       [
         "fetchCars",
@@ -253,8 +259,10 @@ export default {
         "deleteEntity"
       ]),
     getImgPath(car) {
-      if (typeof(car) != "undefined" && car !== null && car.thumbnail.path.length < 1000) {
-        return `${process.env.VUE_APP_API_IMG}${car.thumbnail.path}`;
+      if (typeof(car) != "undefined" && car !== null) {
+        if (car.thumbnail.path.length > 1000) {
+          return car.thumbnail.path;
+        } else return `${process.env.VUE_APP_API_IMG}${car.thumbnail.path}`;
       } else return this.imgDefPath;
     },
     formatDate (date) {

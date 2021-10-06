@@ -64,8 +64,10 @@
         <v-card-text>
           <v-row align="center" justify="center">
             <v-col cols="12">
+              <v-skeleton-loader v-if="loading" type="table"/>
               <v-data-table
                 :headers="itemHeaders"
+                v-show="!loading"
                 :items="items"
                 :loading="loading"
                 :items-per-page="itemsPerPage"
@@ -262,7 +264,7 @@ export default {
         },
         {
           value: "actions",
-          text: "Действия",
+          text: "",
           searchable: false,
           sortable: false
         }

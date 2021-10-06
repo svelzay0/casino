@@ -9,12 +9,13 @@
       xs="8"
     >
       <v-card>
+        <v-skeleton-loader v-if="firstLoad" class="mb-n16" :loading="firstLoad" type="image"/>
         <v-row justify="center" align="center" class="pa-10">
           <img
+            v-show="!firstLoad"
             class="cars__car_image"
             :src="getImgPath(car)"
             alt=""
-            @error="defaultImage"
           />
         </v-row>
         <v-row justify="center" align="center">
@@ -54,7 +55,7 @@
           </v-col>
         </v-row>
         <v-divider></v-divider>
-        <v-row justify="center" align="center" class="pt-6 pb-3 pl-6 pr-3">
+        <v-row justify="center" align="center" class="pt-9 pb-6 pl-6 pr-3">
           <span>
             {{ car.description ? car.description : '-' }}
           </span>
@@ -68,7 +69,7 @@
       sm="12"
       xs="12"
     >
-      <v-card>
+      <v-card class="pb-8 mb-8">
         <v-card-text>
           <v-card-title>
             <span class="headline">{{ title }}</span>
@@ -199,34 +200,42 @@
             </v-col>
           </v-row>
           <v-spacer/>
+          <v-card-actions>
+            <v-row class="pt-3 pl-3">
+              <v-col cols="auto">
+                <v-btn
+                  color="primary"
+                  :disabled="car.name.length < 3
+                            || car.description.length < 3
+                            || car.description.length < 3
+                            || car.number.length < 3
+                            || car.priceMin < 1
+                            || car.priceMax < 1"
+                  @click="submit"
+                >
+                  Сохранить
+                </v-btn>
+              </v-col>
+              <v-spacer/>
+              <v-col cols="auto">
+                <v-btn
+                  :to="{ name: 'Cars' }"
+                >
+                  Отмена
+                </v-btn>
+              </v-col>
+              <v-col cols="auto">
+                <v-btn
+                  v-if="modelId"
+                  color="red text-white"
+                  @click="toDelete"
+                >
+                  Удалить
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-card-actions>
         </v-card-text>
-        <v-card-actions>
-          <v-spacer/>
-          <v-btn
-            :to="{ name: 'Cars' }"
-          >
-            Отмена
-          </v-btn>
-          <v-btn
-            v-if="modelId"
-            color="red text-white"
-            @click="toDelete"
-          >
-            Удалить
-          </v-btn>
-          <v-btn
-            color="primary"
-            :disabled="car.name.length < 3
-                      || car.description.length < 3
-                      || car.description.length < 3
-                      || car.number.length < 3
-                      || car.priceMin < 1
-                      || car.priceMax < 1"
-            @click="submit"
-          >
-            Сохранить
-          </v-btn>
-        </v-card-actions>
         <v-dialog v-model="confirmDeleteForm" max-width="700">
           <confirm-delete-form
             :key="formKey"
@@ -312,7 +321,9 @@ export default {
       confirmDeleteForm: false,
       deleteItem: null,
       formKey: 1,
-      method: null
+      method: null,
+      path: '',
+      firstLoad: true
     }
   },
   mounted () {
@@ -328,6 +339,7 @@ export default {
             name: this.car.thumbnail.originalname,
             path: this.car.thumbnail.path
           }
+          this.firstLoad = false;
         });
       }
       this.editedId = this.modelId;
@@ -353,7 +365,7 @@ export default {
       ])
   },
   watch: {
-    'modelId': function (newVal) {
+    modelId: function (newVal) {
       if (newVal) {
         this.fetchCar(newVal).then(() => {
           this.car = { ...this.getCar };
@@ -518,13 +530,22 @@ export default {
     getImgPath(car) {
       if (this.modelId) {
         if (typeof(car) != "undefined" && car !== null) {
-          if (!car.thumbnail.path && this.fileInput) {
+          if (car.thumbnail.path === '' && this.fileInput) {
+            return this.imgDefPath;
+          } else if (car.thumbnail.path === undefined) {
             return URL.createObjectURL(this.fileInput);
-          } else if (this.fileInput) {
+          } else if (car.thumbnail.path.length > 0 && car.thumbnail.path.length < 1000) {
             return `${process.env.VUE_APP_API_IMG}${car.thumbnail.path}`;
-          } else return this.imgDefPath;
-        } else return this.imgDefPath;
-      } else {
+          } else if (car.thumbnail.path.length > 1000) {
+            return car.thumbnail.path;
+          } 
+          else if (!this.fileInput) {
+            return this.imgDefPath;
+          }
+        } 
+        else return this.imgDefPath;
+      } 
+      else {
          if (this.fileInput && this.method === 'create') {
            return URL.createObjectURL(this.fileInput);
          } else return this.imgDefPath;
@@ -533,20 +554,38 @@ export default {
     defaultImage(e) {
       e.target.src = this.imgDefPath;
     },
+    getBase64Image(url, callback) {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        const reader = new FileReader();
+        reader.onloadend = function() {
+          callback(reader.result);
+        }
+        reader.readAsDataURL(xhr.response);
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.send();
+    },
     setImage() {
       if (this.fileInput) {
-        this.car.thumbnail = {
-          mimetype: this.fileInput.type,
-          originalname: this.fileInput.name,
-          size: this.fileInput.size,
-          path: require("@/files/qashqai.png")
-          // path: this.fileInput.webkitRelativePath
-          // path: `/files/${this.fileInput.name}`
-          // path: require(`@/assets/${this.fileInput.name}`)
-          // path: `/files/${this.fileInput.name}` // path: "/files/5eb4137e099b810b946c87d9_qashqai.png"
-        }
-        // console.log(this.fileInput,`/files/${this.fileInput.name}`)
-        // console.log(this.car.thumbnail)
+        const toDataURL = url => fetch(url)
+        .then(response => response.blob())
+        .then(blob => new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result)
+          reader.onerror = reject
+          reader.readAsDataURL(blob)
+        }))
+        toDataURL(require(`@/files/${this.fileInput.name}`))
+        .then(dataUrl => {
+          this.car.thumbnail = {
+            mimetype: this.fileInput.type,
+            originalname: this.fileInput.name,
+            size: this.fileInput.size,
+            path: dataUrl
+          }
+        })
       } else {
         this.car.thumbnail = {
           mimetype: '',

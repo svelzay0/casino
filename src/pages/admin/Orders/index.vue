@@ -66,8 +66,10 @@
         <v-card-text>
           <v-row align="center" justify="center">
             <v-col cols="12">
+              <v-skeleton-loader v-if="loading" type="table"/>
               <v-data-table
                 :headers="orderHeaders"
+                v-show="!loading"
                 :items="orders"
                 :loading="loading"
                 :items-per-page="5"
@@ -366,12 +368,12 @@ export default {
       ])
   },
   watch: {
-    'itemsPerPage': function (newVal) {
+    itemsPerPage: function (newVal) {
       this.request.limit = newVal;
       this.pageCount = 4100 / newVal;
       this.page = 1;
     },
-    'page': function (newVal) {
+    page: function (newVal) {
       this.request.offset = newVal * this.request.limit;
       this.fetchNewRows();
     },
@@ -436,8 +438,10 @@ export default {
         "changeStatusOfOrder"
       ]),
     getImgPath(car) {
-      if (typeof(car) != "undefined" && car !== null && car.thumbnail.path.length < 1000) {
-        return `${process.env.VUE_APP_API_IMG}${car.thumbnail.path}`;
+      if (typeof(car) != "undefined" && car !== null) {
+        if (car.thumbnail.path.length > 1000) {
+          return car.thumbnail.path;
+        } else return `${process.env.VUE_APP_API_IMG}${car.thumbnail.path}`;
       } else return this.imgDefPath;
     },
     formatDate (date) {
