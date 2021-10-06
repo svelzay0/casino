@@ -44,13 +44,6 @@ export default {
       const routeName = this.$route.name[0].toLowerCase() + this.$route.name.slice(1);
       return this.menuItems[routeName]?.name || 'Добро пожаловать!';
     }
-  },
-  // methods: {
-  //   ucFirst (str) {
-  //     if (!str) return str;
-
-  //     return str[0].toUpperCase() + str.slice(1);
-  //   }
-  // }
+  }
 }
 </script>

@@ -187,11 +187,7 @@ export default {
       if (this.tableName === 'rateTypes') {
         this.entity.unit = this.entityItem.unit
       }
-      if (this.method === 'edit') {
-        this.$emit('successEdit', this.entity, this.tableName);
-      } else {
-        this.$emit('successCreate', this.entity, this.tableName);
-      }
+      this.$emit(`success${this.method === 'edit' ? 'Edit' : 'Create'}`, this.entity, this.tableName);
     }
   }
 }
