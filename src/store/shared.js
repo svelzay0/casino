@@ -16,11 +16,11 @@ export default {
         name: 'Автомобили',
         url: '/cars'
       },
-      'cars/create': {
+      'cars.create': {
         name: 'Создать автомобиль',
         url: '/cars/create'
       },
-      'cars/edit': {
+      'cars.edit': {
         name: 'Карточка автомобиля',
         url: '/cars/edit'
       },

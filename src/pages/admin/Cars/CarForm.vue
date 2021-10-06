@@ -344,6 +344,7 @@ export default {
       }
       this.editedId = this.modelId;
     } else {
+      this.firstLoad = false;
       this.method = 'create';
     }
     if (this.getCategories.length === 0) {
