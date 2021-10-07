@@ -121,9 +121,10 @@
                 </template>
               </v-data-table>
             </v-col>
-            <v-col cols="6" class="order__table_circles pl-10 pr-10 pb-16">
+            <v-col cols="auto" class="order__table_circles pl-10 pr-10 pb-16">
               <v-pagination
                 v-model="page"
+                class="pagination__main"
                 :length="pageCount"
                 circle
               />

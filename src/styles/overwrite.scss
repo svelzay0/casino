@@ -61,6 +61,13 @@
   }
 }
 
+// datatable (0px - 600px)
+@media screen and (max-width: $datatable) {
+  .v-pagination__item {
+    display: none;
+  }
+}
+
 // kettle (0px - 320px)
 @media screen and (max-width: $kettle) {
   .v-btn-toggle {
