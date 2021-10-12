@@ -163,31 +163,51 @@ export default {
   },
   methods: {
     submit () {
-      if (this.tableName !== 'rates') {
-        this.entity.name = this.entityItem.name
-      } else if (this.tableName === 'rates') {
-        this.entity.price = this.entityItem.price
-        this.rateTypes.forEach((el) => {
-          if (el.id === this.entityItem.rateTypeId) {
-            this.entity.rateTypeId = el
-          }
-        })
+      switch (this.tableName) {
+        case 'rates': {
+          this.entity.price = this.entityItem.price;
+          this.rateTypes.forEach((el) => {
+            if (el.id === this.entityItem.rateTypeId) {
+              this.entity.rateTypeId = el
+            }
+          });
+          break;
+        }
+        case 'cities': {
+          this.entity.name = this.entityItem.name;
+          break;
+        }
+        case 'points': {
+          this.entity.name = this.entityItem.name;
+          this.entity.address = this.entityItem.address;
+          this.cities.forEach((el) => {
+            if (el.id === this.entityItem.cityId) {
+              this.entity.cityId = el
+            }
+          });
+          break;
+        }
+        case 'categories': {
+          this.entity.name = this.entityItem.name
+          this.entity.description = this.entityItem.description;
+          break;
+        }
+        case 'rateTypes': {
+          this.entity.name = this.entityItem.name
+          this.entity.unit = this.entityItem.unit
+          break;
+        }
       }
-      if (this.tableName === 'points') {
-        this.entity.address = this.entityItem.address
-        this.cities.forEach((el) => {
-          if (el.id === this.entityItem.cityId) {
-            this.entity.cityId = el
-          }
-        })
+      switch (this.method) {
+        case 'edit': {
+          this.$emit('successEdit', this.entity, this.tableName);
+          break;
+        }
+        case 'create': {
+          this.$emit('successCreate', this.entity, this.tableName);
+          break;
+        }
       }
-      if (this.tableName === 'categories') {
-        this.entity.description = this.entityItem.description
-      }
-      if (this.tableName === 'rateTypes') {
-        this.entity.unit = this.entityItem.unit
-      }
-      this.$emit(`success${this.method === 'edit' ? 'Edit' : 'Create'}`, this.entity, this.tableName);
     }
   }
 }

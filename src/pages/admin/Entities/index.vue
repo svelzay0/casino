@@ -55,6 +55,7 @@
                 color="info"
                 @click="toCreate"
               >
+                <v-icon>mdi-plus</v-icon>
                 <span>{{ createTitle }}</span>
               </v-btn>
             </v-col>
@@ -63,8 +64,10 @@
         <v-card-text>
           <v-row align="center" justify="center">
             <v-col cols="12">
+              <v-skeleton-loader v-if="loading" type="table"/>
               <v-data-table
                 :headers="itemHeaders"
+                v-show="!loading"
                 :items="items"
                 :loading="loading"
                 :items-per-page="itemsPerPage"
@@ -131,7 +134,7 @@
                               outlined
                               color="black"
                               v-on="on"
-                              @click="toEdit(item, items.map(function(x) {return x.id; }).indexOf(item.id))"
+                              @click="toEdit(item)"
                             >
                               <v-icon color="primary">mdi-pencil</v-icon>
                               <span class="order__actions_text">Изменить</span>
@@ -165,7 +168,6 @@
           <confirm-delete-form
             :key="formKey"
             :entity="deleteItem"
-            :table-name="filters.tableName"
             @cancel="closeForm()"
             @successDelete="formSuccessDelete($event)"
           />
@@ -200,7 +202,6 @@ export default {
       items: [],
       itemHeaders: [],
       entity: null,
-      entityKey: null,
       deleteItem: null,
       formKey: 1,
       entityForm: false,
@@ -263,7 +264,7 @@ export default {
         },
         {
           value: "actions",
-          text: "Действия",
+          text: "",
           searchable: false,
           sortable: false
         }
@@ -588,10 +589,9 @@ export default {
       this.formKey++;
       this.entityForm = true;
     },
-    toEdit (item, key) {
+    toEdit (item) {
       this.method = 'edit';
       this.entity = item;
-      this.entityKey = key;
       this.formKey++;
       this.entityForm = true;
     },

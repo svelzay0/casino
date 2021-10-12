@@ -78,8 +78,13 @@ export default {
     drawer: true,
     items: [
         {
+          title: 'Домашнаяя страница',
+          to: { name: 'Home' },
+          ico: 'mdi-home-variant'
+        },
+        {
           title: 'Карточка автомобиля',
-          to: { name: 'CarCard' },
+          to: { name: 'Cars' },
           ico: 'mdi-pencil'
         },
         {
@@ -93,26 +98,11 @@ export default {
           ico: 'mdi-calendar-plus'
         },
         {
-          title: 'Home',
-          to: { name: 'Home' },
-          ico: 'mdi-home-variant'
-        },
-        {
-          title: 'Menu 5',
-          to: { name: 'Menu5' },
-          ico: 'mdi-view-list'
-        },
-        {
-          title: 'Menu 6',
-          to: { name: 'Menu6' },
-          ico: 'mdi-account'
-        },
-        {
-          title: 'Menu 7',
-          to: { name: 'Menu7' },
-          ico: 'mdi-notebook-edit'
+          title: 'Error 404',
+          to: { name: 'Error' },
+          ico: 'mdi-alert-circle'
         }
-      ],
+      ]
   })
 }
 </script>

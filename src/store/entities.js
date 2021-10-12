@@ -7,10 +7,12 @@ export default {
     cities: [],
     points: [],
     orders: [],
+    cars: [],
+    car: {},
     orderStatuses: [],
     categories: [],
     rates: [],
-    rateTypes: []
+    rateTypes: [],
   },
   mutations: {
     setCities(state, payload) {
@@ -21,6 +23,12 @@ export default {
     },
     setOrders(state, payload) {
       state.orders = payload;
+    },
+    setCars(state, payload) {
+      state.cars = payload;
+    },
+    setCar(state, payload) {
+      state.car = payload;
     },
     setOrderStatuses(state, payload) {
       state.orderStatuses = payload;
@@ -60,6 +68,22 @@ export default {
         handleError(e);
       }
     },
+    async fetchCars({ commit }, item) {
+      try {
+        const { data } = await axios(ApiRequest("get", `/car?offset=${item.offset}&limit=${item.limit}`));
+        commit("setCars", data.data);
+      } catch (e) {
+        handleError(e);
+      }
+    },
+    async fetchCar({ commit }, id) {
+      try {
+        const { data } = await axios(ApiRequest("get", `/car/${id}`));
+        commit("setCar", data.data);
+      } catch (e) {
+        handleError(e);
+      }
+    },
     async fetchOrderStatuses({ commit }) {
       try {
         const { data } = await axios(ApiRequest("get", "/orderStatus"));
@@ -92,23 +116,26 @@ export default {
         handleError(e);
       }
     },
-    async deleteEntity(context, item) {
+    async deleteEntity({ commit }, item) {
       try {
         await axios(ApiRequest("delete", `/${item.entity}/${item.id}`));
+        resetCar({ commit }, item.entity);
       } catch (e) {
         handleError(e);
       }
     },
-    async editEntity(context, item) {
+    async editEntity({ commit }, item) {
       try {
         await axios(ApiRequest("put", `/${item.entityName}/${item.item.id}`, item.item));
+        resetCar({ commit }, item.entityName);
       } catch (e) {
         handleError(e);
       }
     },
-    async createEntity(context, item) {
+    async createEntity({ commit }, item) {
       try {
         await axios(ApiRequest("post", `/${item.entityName}`, item.item));
+        resetCar({ commit }, item.entityName);
       } catch (e) {
         handleError(e);
       }
@@ -130,6 +157,12 @@ export default {
     },
     getOrders(state) {
       return state.orders;
+    },
+    getCars(state) {
+      return state.cars;
+    },
+    getCar(state) {
+      return state.car;
     },
     getOrderStatuses(state) {
       return state.orderStatuses;
@@ -156,5 +189,11 @@ const ApiRequest = (method, url, data = null) => {
       "Authorization": "Bearer " + localStorage.getItem("token")
     },
     data: data
+  }
+}
+
+const resetCar = ({ commit }, entity) => {
+  if (entity === 'car') {
+    commit("setCar", null);
   }
 }

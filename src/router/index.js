@@ -14,6 +14,7 @@ const routes = [
   {
     path: '/admin',
     name: 'Admin',
+    redirect: { name: 'Home' },
     beforeEnter: AuthGuard,
     component: () => import("../layouts/AppLayout.vue"),
     children: [
@@ -24,10 +25,23 @@ const routes = [
         component: () => import("../pages/admin/Home"),
       },
       {
-        path: "car",
-        name: "CarCard",
+        path: "cars",
+        name: "Cars",
         beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/CarCard"),
+        component: () => import("../pages/admin/Cars/index.vue"),
+      },
+      {
+        path: "cars/create",
+        name: "Cars.create",
+        beforeEnter: AuthGuard,
+        component: () => import("../pages/admin/Cars/create.vue"),
+      },
+      {
+        path: "cars/:id/edit",
+        name: "Cars.edit",
+        props: true,
+        beforeEnter: AuthGuard,
+        component: () => import("../pages/admin/Cars/edit.vue"),
       },
       {
         path: "entities",
@@ -40,6 +54,11 @@ const routes = [
         name: "Orders",
         beforeEnter: AuthGuard,
         component: () => import("../pages/admin/Orders/index.vue"),
+      },
+      {
+        path: "error",
+        name: "Error",
+        component: () => import("../pages/admin/Error"),
       },
       {
         path: "menu5",
@@ -63,7 +82,8 @@ const routes = [
   },
   {
     path: "*",
-    name: "Error",
+    redirect: { name: 'Error' },
+    name: "MainError",
     component: () => import("../pages/admin/Error"),
   },
 ]
