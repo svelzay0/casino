@@ -4,44 +4,101 @@
       @drawer="drawer = !drawer"
     />
     <v-navigation-drawer
-      v-model="drawer"
       color="#0E121D"
       app
+      :mini-variant="!drawer"
       :width="280"
     >
-      <!-- <v-row
-        align="center"
-        justify="center"
-        class="pads__zero"
+      <div
+        v-if="drawer"
+        class="pt-4 pb-2 d-flex justify-center"
+        style="min-width: 280px;"
       >
-        <v-col
-          cols="auto"
-          class="ma-0 pa-0"
+        <v-tabs
+          v-model="tabs.gameType"
+          align-tabs="center"
+          class="mx-5"
+          hide-slider
+          height="40"
+          background-color="transparent"
+          grow
         >
-          <v-img
-            contain
-            class="mx-auto"
-            max-height="25"
-            max-width="25"
-            :src="require('@/assets/logo.svg')"
-            :alt="'Need-for-drive'"
-          />
-        </v-col>
-        <v-col
-          cols="auto"
-          class="ma-0 pa-0"
-        >
-          <v-card-title>
-            <span class="auth__logo_text">Need for car</span>
-          </v-card-title>
-        </v-col>
-      </v-row> -->
+          <v-tab style="margin-right: -16px;">
+            <v-icon 
+              :class="{
+                'icon_card': tabs.gameType === 0,
+                'icon_card-active': tabs.gameType === 1,
+              }" 
+              style="
+              width: 16px;
+              height: 20px;
+              margin-top: 9px;"
+            />
+            Casino
+          </v-tab>
+          <v-tab>
+            <v-icon 
+              :class="{
+                'icon_ball': tabs.gameType === 0,
+                'icon_ball-active': tabs.gameType === 1,
+              }"
+              style="
+              width: 19px;
+              height: 20px;
+              margin-top: 5px;"
+            />
+            Sportbooks
+          </v-tab>
+        </v-tabs>
+      </div>
+
+      <div 
+        v-else 
+        class="pt-4 pb-2 d-flex justify-center" 
+        style="height: 40px;
+        cursor: pointer;"
+        @click="tabs.gameType === 0 ? tabs.gameType = 1 : tabs.gameType = 0"
+      >
+        <v-icon
+          v-if="tabs.gameType === 0"
+          class="icon_card" 
+          style="
+          width: 9px;
+          height: 20px;
+          margin-top: 9px;"
+        />
+        <v-icon
+          v-else
+          class="icon_ball-active"  
+          style="
+          width: 15px;
+          height: 20px;
+          margin-top: 9px;"
+        />
+      </div>
+
+      <div class="d-flex justify-center py-4">
+        <div class="menu-img-button-first">
+
+        </div>
+        <div class="menu-img-button-second">
+
+        </div>
+        <!-- <a href="#" class="menu-img-buttons">
+          <img src="/resources/images/promotions.png" alt="">
+        </a>
+        <a href="#" class="menu-img-buttons">
+          <img src="/resources/images/tournament.png" alt="">
+        </a> -->
+      </div>
+      
+      
       <v-list density="compact">
         <v-list-item-group
-          color="rgb(14, 18, 29)"
+          color="#9186FF"
         >
           <v-list-item
-            v-for="item in items"
+            v-for="item in itemsTop"
             :key="item.title"
             :to="item.to"
             dense
@@ -61,7 +118,7 @@
           color="rgb(14, 18, 29)"
         >
           <v-list-item
-            v-for="item in items"
+            v-for="item in itemsBottom"
             :key="item.title"
             :to="item.to"
             dense
@@ -91,9 +148,8 @@ export default {
     FooterMenu,
   },
   data: () => ({
-    padless: false,
     drawer: true,
-    items: [
+    itemsTop: [
         {
           title: 'All Games',
           to: { name: 'AllGames' },
@@ -134,27 +190,32 @@ export default {
           to: { name: 'Roulettes' },
           icon: 'roulettes'
         },
-        // {
-        //   title: 'Карточка автомобиля',
-        //   to: { name: 'Cars' },
-        //   ico: 'mdi-pencil'
-        // },
-        // {
-        //   title: 'Сущности',
-        //   to: { name: 'Entities' },
-        //   ico: 'mdi-clipboard-list'
-        // },
-        // {
-        //   title: 'Заказы',
-        //   to: { name: 'Orders' },
-        //   ico: 'mdi-calendar-plus'
-        // },
-        // {
-        //   title: 'Error 404',
-        //   to: { name: 'Error' },
-        //   ico: 'mdi-alert-circle'
-        // }
-      ]
+    ],
+    itemsBottom: [
+        {
+          title: 'Favorites',
+          to: { name: 'Favorites' },
+          icon: 'favorites'
+        },
+        {
+          title: 'Recent Played',
+          to: { name: 'RecentPlayed' },
+          icon: 'recentplayed'
+        },
+        {
+          title: 'Promotions',
+          to: { name: 'Promotions' },
+          icon: 'promotions'
+        },
+        {
+          title: 'VIP Club',
+          to: { name: 'VIPClub' },
+          icon: 'vipclub'
+        },
+    ],
+    tabs: {
+      gameType: 0
+    }
   })
 }
 </script>

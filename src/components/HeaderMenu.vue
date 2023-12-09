@@ -3,16 +3,17 @@
     color="#111623"
     app
   >
-    <!-- <v-row
+    <v-row
       align="center"
-      justify="center"
+      justify="start"
     >
       <v-col cols="auto">
         <v-app-bar-nav-icon
+          color="white"
           @click="$emit('drawer')"
         />
       </v-col>
-      <v-col cols="auto">
+      <!-- <v-col cols="auto">
         <v-text-field
           class="search pt-2"
           :label="'Поиск...'"
@@ -37,8 +38,8 @@
         </v-avatar>
         <span class="pr-10 pl-3">Admin</span>
         <user-menu />
-      </v-col>
-    </v-row> -->
+      </v-col> -->
+    </v-row>
   </v-app-bar>
 </template>
 

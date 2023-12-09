@@ -5,7 +5,7 @@
       class="pl-10"
     >
       <v-card height="400">
-        <v-card-title>Menu7</v-card-title>
+        <v-card-title>Favorites</v-card-title>
       </v-card>
     </v-col>
   </v-row>

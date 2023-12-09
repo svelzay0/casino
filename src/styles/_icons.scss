@@ -4,13 +4,23 @@
 
     &_size {
         &_full {
-          width: 100% !important;
-          height: 100% !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        &_fit {
+            width: fit-content !important;
+            height: fit-content !important;
         }
     
         &_drawer {
-          width: 24px !important;
-          height: 24px !important;
+            width: 24px !important;
+            height: 24px !important;
+        }
+
+        &_btn {
+            width: 16px !important;
+            height: 16px !important;
         }
     }
 
@@ -37,5 +47,29 @@
     }
     &_roulettes {
         background-image: url('../assets/images/menu-icons/poker.svg');
+    }
+    &_favorites {
+        background-image: url('../assets/images/menu-icons/favorites.svg');
+    }
+    &_recentplayed {
+        background-image: url('../assets/images/menu-icons/recentplayed.svg');
+    }
+    &_promotions {
+        background-image: url('../assets/images/menu-icons/promotions.svg');
+    }
+    &_vipclub {
+        background-image: url('../assets/images/menu-icons/vipclub.svg');
+    }
+    &_ball {
+        background-image: url('../assets/images/menu-icons/ball.svg');
+    }
+    &_card {
+        background-image: url('../assets/images/menu-icons/card.svg');
+    }
+    &_ball-active {
+        background-image: url('../assets/images/menu-icons/ball-active.svg');
+    }
+    &_card-active {
+        background-image: url('../assets/images/menu-icons/card-active.svg');
     }
 }

@@ -6,7 +6,6 @@
 .v-main {
   background: #0a0a16;
 }
-
 .main-text-default {
   color: #576081;
   font-feature-settings: 'clig' off, 'liga' off;
@@ -17,4 +16,41 @@
   letter-spacing: 0.1px;
   display: flex;
   align-items: center;
+}
+
+.v-tabs {
+  border-radius: 10px;
+  border: 1px solid #1C2436;
+  background: linear-gradient(270deg, rgba(23, 30, 47, 0.84) 0%, rgba(23, 30, 47, 0.44) 100%);
+  text-transform: none;
+}
+.v-tab {
+  color: #576081 !important;
+  text-transform: none !important;
+  letter-spacing: 0.1px !important;
+}
+.v-tab--active {
+  background: #1E273D;
+  border-radius: 10px;
+  color: #fff !important;
+}
+.v-tab--active:hover {
+  border-radius: 10px !important;
+}
+.v-tab--active.v-tab:not(:focus)::before {
+  border-radius: 10px !important;
+}
+.menu-img-button-first {
+  background-image: url("../assets/images/promotions.png");
+  height: 55px;
+  border-radius: 5px;
+  width: 115px;
+}
+.menu-img-button-second {
+  background-image: url("../assets/images/tournament.png");
+  height: 55px;
+  margin-top: 5px;
+  margin-left: 5px;
+  border-radius: 5px;
+  width: 123px;
 }
