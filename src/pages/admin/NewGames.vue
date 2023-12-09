@@ -4,9 +4,10 @@
       cols="8"
       class="pl-10"
     >
-      <v-card height="400">
+    NewGames
+      <!-- <v-card height="400">
         <v-card-title>NewGames</v-card-title>
-      </v-card>
+      </v-card> -->
     </v-col>
   </v-row>
 </template>

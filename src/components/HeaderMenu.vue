@@ -13,32 +13,56 @@
           @click="$emit('drawer')"
         />
       </v-col>
-      <!-- <v-col cols="auto">
-        <v-text-field
-          class="search pt-2"
-          :label="'Поиск...'"
-          dense
-          append-icon="mdi-magnify"
-          clearable
-        />
+      <v-col cols="auto">
+        <div class="title-text">
+          WINZARD
+        </div>
       </v-col>
+
+      <v-col cols="auto">
+        <div class="pt-7">
+          <v-autocomplete
+            :items="[]"
+            class="search-input"
+            base-color="info"
+            bg-color="success"
+            color="#fff"
+            append-inner-icon="mdi-magnify"
+            auto-select-first
+            outlined
+            variant="solo-filled"
+            dense
+            item-props
+            placeholder="Search games"
+            prepend-inner-icon="mdi-magnify"
+          ></v-autocomplete>
+        </div>
+      </v-col>
+
       <v-spacer />
-      <v-col
-        cols="auto"
-        class="col__borders ma-4 pb-2"
-      >
-        <notification-dropdown />
+
+      <v-col cols="auto">
+        <v-btn
+          class="classic-button-white-text"
+          height="44"
+          append-icon="mdi-close"
+          block
+          color="rgb(17, 22, 35)"
+        >
+          Log in
+        </v-btn>
       </v-col>
-      <v-col cols="auto" class="avatar">
-        <v-avatar >
-          <img
-            :src="require('@/assets/user-avatar.jpg')"
-            alt="User"
-          >
-        </v-avatar>
-        <span class="pr-10 pl-3">Admin</span>
-        <user-menu />
-      </v-col> -->
+      <v-col cols="auto">
+        <v-btn
+          class="classic-button-register"
+          height="44"
+          append-icon="mdi-close"
+          block
+        >
+          Register
+        </v-btn>
+      </v-col>
+
     </v-row>
   </v-app-bar>
 </template>

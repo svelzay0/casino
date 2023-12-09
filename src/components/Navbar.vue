@@ -3,7 +3,9 @@
     <header-menu
       @drawer="drawer = !drawer"
     />
+
     <v-navigation-drawer
+      location="bottom"
       color="#0E121D"
       app
       :mini-variant="!drawer"
@@ -78,20 +80,9 @@
       </div>
 
       <div class="d-flex justify-center py-4">
-        <div class="menu-img-button-first">
-
-        </div>
-        <div class="menu-img-button-second">
-
-        </div>
-        <!-- <a href="#" class="menu-img-buttons">
-          <img src="/resources/images/promotions.png" alt="">
-        </a>
-        <a href="#" class="menu-img-buttons">
-          <img src="/resources/images/tournament.png" alt="">
-        </a> -->
+        <div class="menu-img-button-first" />
+        <div class="menu-img-button-second" />
       </div>
-      
       
       <v-list density="compact">
         <v-list-item-group
@@ -115,7 +106,7 @@
         <v-divider color="#202635" class="ma-4" />
 
         <v-list-item-group
-          color="rgb(14, 18, 29)"
+          color="#9186FF"
         >
           <v-list-item
             v-for="item in itemsBottom"
@@ -133,7 +124,68 @@
         </v-list-item-group>
       </v-list>
 
+      <div
+        v-if="drawer"
+        class="d-flex justify-center ma-5 mb-2"
+      >
+        <v-btn
+          class="classic-button"
+          height="44"
+          append-icon="mdi-close"
+          block
+          color="#171E2F"
+        >
+          <v-icon 
+            class="icon_support" 
+            style="
+            width: 32px;
+            height: 32px;
+            margin-top: 9px;"
+          />
+          Live Support
+        </v-btn>
+      </div>
+
+      <div
+        v-if="drawer"
+        class="d-flex justify-center ma-0"
+      >
+        <v-btn
+          class="classic-button"
+          height="40"
+          append-icon="mdi-close"
+          width="116"
+          color="#171E2F"
+        >
+          <v-icon 
+            class="icon_telegram" 
+            style="
+            width: 32px;
+            height: 32px;
+            margin-top: 16px;"
+          />
+          Telegram
+        </v-btn>
+
+        <v-btn
+          class="classic-button ml-2"
+          height="40"
+          width="116"
+          append-icon="mdi-close"
+          color="#171E2F"
+        >
+          <v-icon 
+            class="icon_email" 
+            style="
+            width: 32px;
+            height: 32px;
+            margin-top: 16px;"
+          />
+          Email
+        </v-btn>
+      </div>
     </v-navigation-drawer>
+
     <footer-menu />
   </div>
 </template>
