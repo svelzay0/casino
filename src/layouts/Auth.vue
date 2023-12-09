@@ -13,19 +13,6 @@
           cols="auto"
           class="ma-0 pa-0"
         >
-          <v-img
-            contain
-            class="mx-auto"
-            max-height="120"
-            max-width="300"
-            :src="require('@/assets/logo.svg')"
-            :alt="'Need-for-drive'"
-          />
-        </v-col>
-        <v-col
-          cols="auto"
-          class="ma-0 pa-0"
-        >
           <v-card-title class="headline">
             <span class="auth__logo_text">Need for drive</span>
           </v-card-title>

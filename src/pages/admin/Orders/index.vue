@@ -271,7 +271,7 @@ export default {
   },
   data() {
     return {
-      imgDefPath: require("@/assets/default_car.jpg"),
+      // imgDefPath: require("@/assets/default_car.jpg"),
       loading: true,
       page: 1,
       pageCount: 820,

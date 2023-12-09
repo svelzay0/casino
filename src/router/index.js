@@ -1,81 +1,99 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Auth from '../layouts/Auth.vue'
-import AuthGuard from "@/router/auth-guard";
+// import Auth from '../layouts/Auth.vue'
+// import AuthGuard from "@/router/auth-guard";
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Auth',
-    component: Auth
-  },
-  {
-    path: '/admin',
     name: 'Admin',
-    redirect: { name: 'Home' },
-    beforeEnter: AuthGuard,
+    // redirect: { name: 'Home' },
+    // beforeEnter: AuthGuard,
     component: () => import("../layouts/AppLayout.vue"),
     children: [
       {
         path: "home",
         name: "Home",
-        beforeEnter: AuthGuard,
+        // beforeEnter: AuthGuard,
         component: () => import("../pages/admin/Home"),
       },
       {
-        path: "cars",
-        name: "Cars",
-        beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/Cars/index.vue"),
+        path: "AllGames",
+        name: "AllGames",
+        // beforeEnter: AuthGuard,
+        component: () => import("../pages/admin/AllGames"),
       },
       {
-        path: "cars/create",
-        name: "Cars.create",
-        beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/Cars/create.vue"),
+        path: "NewGames",
+        name: "NewGames",
+        // beforeEnter: AuthGuard,
+        component: () => import("../pages/admin/NewGames"),
       },
       {
-        path: "cars/:id/edit",
-        name: "Cars.edit",
-        props: true,
-        beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/Cars/edit.vue"),
+        path: "TopGames",
+        name: "TopGames",
+        // beforeEnter: AuthGuard,
+        component: () => import("../pages/admin/NewGames"),
       },
       {
-        path: "entities",
-        name: "Entities",
-        beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/Entities/index.vue"),
+        path: "HotGames",
+        name: "HotGames",
+        // beforeEnter: AuthGuard,
+        component: () => import("../pages/admin/NewGames"),
       },
       {
-        path: "orders",
-        name: "Orders",
-        beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/Orders/index.vue"),
+        path: "Megaways",
+        name: "Megaways",
+        // beforeEnter: AuthGuard,
+        component: () => import("../pages/admin/NewGames"),
       },
       {
-        path: "error",
-        name: "Error",
-        component: () => import("../pages/admin/Error"),
+        path: "Books",
+        name: "Books",
+        // beforeEnter: AuthGuard,
+        component: () => import("../pages/admin/NewGames"),
       },
       {
-        path: "menu5",
-        name: "Menu5",
-        beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/Menu5"),
+        path: "Fruits",
+        name: "Fruits",
+        // beforeEnter: AuthGuard,
+        component: () => import("../pages/admin/NewGames"),
       },
       {
-        path: "menu6",
-        name: "Menu6",
-        beforeEnter: AuthGuard,
-        component: () => import("../pages/admin/Menu6"),
+        path: "Roulettes",
+        name: "Roulettes",
+        // beforeEnter: AuthGuard,
+        component: () => import("../pages/admin/NewGames"),
       },
+      // {
+      //   path: "cars",
+      //   name: "Cars",
+      //   // beforeEnter: AuthGuard,
+      //   component: () => import("../pages/admin/Cars/index.vue"),
+      // },
+      // {
+      //   path: "entities",
+      //   name: "Entities",
+      //   // beforeEnter: AuthGuard,
+      //   component: () => import("../pages/admin/Entities/index.vue"),
+      // },
+      // {
+      //   path: "orders",
+      //   name: "Orders",
+      //   // beforeEnter: AuthGuard,
+      //   component: () => import("../pages/admin/Orders/index.vue"),
+      // },
+      // {
+      //   path: "error",
+      //   name: "Error",
+      //   component: () => import("../pages/admin/Error"),
+      // },
       {
         path: "menu7",
         name: "Menu7",
-        beforeEnter: AuthGuard,
+        // beforeEnter: AuthGuard,
         component: () => import("../pages/admin/Menu7"),
       },
     ],

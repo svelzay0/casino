@@ -1,0 +1,41 @@
+.icon {
+    background-size: cover !important;
+    z-index: 1;
+
+    &_size {
+        &_full {
+          width: 100% !important;
+          height: 100% !important;
+        }
+    
+        &_drawer {
+          width: 24px !important;
+          height: 24px !important;
+        }
+    }
+
+    &_allgames {
+        background-image: url('../assets/images/menu-icons/allgames.svg');
+    }
+    &_slotsgames {
+        background-image: url('../assets/images/menu-icons/slotsgames.svg');
+    }
+    &_topgames {
+        background-image: url('../assets/images/menu-icons/tablegames.svg');
+    }
+    &_hotgames {
+        background-image: url('../assets/images/menu-icons/livegames.svg');
+    }
+    &_megaways {
+        background-image: url('../assets/images/menu-icons/blackjack.svg');
+    }
+    &_books {
+        background-image: url('../assets/images/menu-icons/roulette.svg');
+    }
+    &_fruits {
+        background-image: url('../assets/images/menu-icons/crash.svg');
+    }
+    &_roulettes {
+        background-image: url('../assets/images/menu-icons/poker.svg');
+    }
+}

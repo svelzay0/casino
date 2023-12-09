@@ -1,9 +1,9 @@
 <template>
   <v-app-bar
-    color="white"
+    color="#111623"
     app
   >
-    <v-row
+    <!-- <v-row
       align="center"
       justify="center"
     >
@@ -38,20 +38,20 @@
         <span class="pr-10 pl-3">Admin</span>
         <user-menu />
       </v-col>
-    </v-row>
+    </v-row> -->
   </v-app-bar>
 </template>
 
 <script>
-import NotificationDropdown from './NotificationDropdown'
-import UserMenu from './UserMenu'
+// import NotificationDropdown from './NotificationDropdown'
+// import UserMenu from './UserMenu'
 
 export default {
   name: 'HeaderMenu',
 
-  components: {
-    NotificationDropdown,
-    UserMenu
-  }
+  // components: {
+  //   NotificationDropdown,
+  //   UserMenu
+  // }
 }
 </script>

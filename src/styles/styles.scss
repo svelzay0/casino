@@ -1,189 +1,20 @@
-@import "variables";
+@import "_variables";
+@import "_icons";
 @import "overwrite";
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
-.fill-height {
-  background-color: $main-whitesmoke;
+.v-main {
+  background: #0a0a16;
 }
-.auth__logo_text {
-  color: $main-text-color;
+
+.main-text-default {
+  color: #576081;
+  font-feature-settings: 'clig' off, 'liga' off;
+  font-size: 14px;
+  font-style: normal;
   font-weight: 600;
-}
-.auth__form_login {
-  font-weight: 400;
-  color: $main-text-color;
-  font-size: 17.5px;
   line-height: 20px;
-}
-.auth__form_tip {
-  color: $main-dark-gray;
-  font-size: 12.5px;
-}
-.auth__form_link_text {
-  color: $main-light-blue;
-  text-decoration: none;
-  font-size: 12.5px;
-  line-height: 12px;
-}
-.auth__form_link_text:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}
-.auth__form_btn_text {
-  font-weight: 400;
-  color: $main-white;
-  font-size: 12.5px;
-}
-.app {
-  background-color: $main-whitesmoke;
-}
-.auth__logo_text {
-  color: $main-text-color;
-  font-weight: 400;
-}
-.admin__footer_links {
+  letter-spacing: 0.1px;
   display: flex;
-  width: 100%;
-  justify-content: space-between;
-}
-.footer_left_text {
-  font-size: 14px;
-  line-height: 16px;
-  color: $main-blue;
-  margin-right: 16px;
-  padding-left: 280px;
-  cursor: pointer;
-}
-.footer_left_text_v2 {
-  font-size: 14px;
-  line-height: 16px;
-  color: $main-blue;
-  margin-right: 16px;
-  cursor: pointer;
-}
-.footer_right {
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 16px;
-  color: $main-text-color;
-}
-.main__title {
-  color: $main-text-color;
-}
-.model__car_image {
-  width: 128px;
-  height: 58px;
-}
-.cars__car_image {
-  width: 400px;
-  height: 170px;
-}
-.order__actions {
-  width: 120px;
-}
-.entity__create_btn {
-  width: auto;
-}
-.order__hrs {
-  display: none;
-}
-.error__main {
-  padding-top: 100px;
-}
-.error__text {
-  color:$main-semilight-gray;
-  font-size: 120px;
-  font-weight: 300;
-}
-
-// desktop(1466px - 2048px)
-@media screen and (max-width: $desktop) {
-  .order__actions {
-    width: 100px;
-  }
-  .order__actions_text {
-    display: none;
-  }
-  .cars__car_image {
-    width: 300px;
-    height: 130px;
-  }
-}
-
-// desktop-medium(1266px - 1465px)
-@media screen and (max-width: $desktop-medium) {
-  .order__actions {
-    width: 50px;
-  }
-  .order__actions_text {
-    display: none;
-  }
-  .cars__car_image {
-    width: 240px;
-    height: 100px;
-  }
-}
-
-// desktop-min (1024px - 1265px)
-@media screen and (max-width: $desktop-min) {
-  .footer_left_text {
-    padding-left: 20px;
-  }
-  .order__actions_text {
-    display: none;
-  }
-}
-
-// tablet (768px - 1023px)
-@media screen and (max-width: $tablet) {
-  // future styles
-}
-
-// datatable (0px - 600px)
-@media screen and (max-width: $datatable) {
-  .order__hrs {
-    display: block;
-    border-bottom: 1px solid $main-border-gray;
-    background-color: $main-border-gray;
-    width: 600px;
-    height: 5px;
-    margin: 16px -16px 0px -300px;
-  }
-}
-
-// mobile (320px - 767px)
-@media screen and (max-width: $mobile) {
-  .search {
-    display: none;
-  }
-  .footer_left_text {
-    display: none;
-  }
-  .footer_left_text_v2 {
-    display: none;
-  }
-  .order__addition_info {
-    display: none;
-  }
-  .order__actions {
-    width: 30px;
-  }
-  .cars__car_image {
-    width: 210px;
-    height: 90px;
-  }
-}
-
-// kettle (0px - 320px)
-@media screen and (max-width: $kettle) {
-  .avatar {
-    display: none;
-  }
-  .order__addition_info {
-    display: none;
-  }
-  .cars__car_image {
-    width: 160px;
-    height: 70px;
-  }
+  align-items: center;
 }
